@@ -12,7 +12,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
   if (orderItems && orderItems.length === 0) {
     res.status(400);
-    throw new Error("No order items");
+    throw new Error("No se ordenaron ítems");
   } else {
     // get the ordered items from our database
     const itemsFromDB = await Product.find({
@@ -71,7 +71,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     res.status(200).json(order)
   }else{
     res.status(404)
-    throw new Error('Order not found')
+    throw new Error('Orden no encontrada')
   }
 });
 
@@ -80,18 +80,18 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @access   Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
   const { verified, value } = await verifyPayPalPayment(req.body.id);
-  if (!verified) throw new Error("Payment not verified");
+  if (!verified) throw new Error("Pago no verificado");
 
   // check if this transaction has been used before
   const isNewTransaction = await checkIfNewTransaction(Order, req.body.id);
-  if (!isNewTransaction) throw new Error("Transaction has been used before");
+  if (!isNewTransaction) throw new Error("La transacción ya ha sido usada antes");
 
   const order = await Order.findById(req.params.id);
 
   if (order) {
     // check the correct amount was paid
     const paidCorrectAmount = order.totalPrice.toString() === value;
-    if (!paidCorrectAmount) throw new Error("Incorrect amount paid");
+    if (!paidCorrectAmount) throw new Error("Monto a pagar incorrecto");
 
     order.isPaid = true;
     order.paidAt = Date.now();
@@ -107,7 +107,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     res.json(updatedOrder);
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error("Orden no encontrada");
   }
 });
 
@@ -126,7 +126,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
     res.status(200).json(updateOrder);
   }else {
     res.status(404);
-    throw new Error('Order not found')
+    throw new Error("Orden no encontrada");
   }
 });
 

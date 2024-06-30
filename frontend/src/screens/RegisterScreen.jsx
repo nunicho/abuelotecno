@@ -53,11 +53,11 @@ const RegisterScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <h1>Registrarse</h1>
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name" className="my-3">
-          <Form.Label> Name</Form.Label>
+          <Form.Label> Nombre</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter name"
@@ -67,10 +67,10 @@ const RegisterScreen = () => {
         </Form.Group>
 
         <Form.Group controlId="email" className="my-3">
-          <Form.Label> Email Address</Form.Label>
+          <Form.Label> Dirección de email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Ingresar email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
@@ -79,17 +79,17 @@ const RegisterScreen = () => {
           <Form.Label> Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter password"
+            placeholder="Ingresar password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="confirmPassword" className="my-3">
-          <Form.Label> Confirm Password</Form.Label>
+          <Form.Label> Confirmar password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm password"
+            placeholder="Confirmar password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
@@ -100,7 +100,7 @@ const RegisterScreen = () => {
           className="mt-2"
           disabled={isLoading}
         >
-          Register
+          Registrarse
         </Button>
 
         {isLoading && <Loader />}
@@ -108,7 +108,7 @@ const RegisterScreen = () => {
 
       <Row className="py-3">
         <Col>
-          Already have an account?{" "}
+          ¿Ya tienes una cuenta?{" "}
           <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
             Login
           </Link>

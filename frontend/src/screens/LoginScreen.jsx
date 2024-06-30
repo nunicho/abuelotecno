@@ -49,7 +49,7 @@ const LoginScreen = () => {
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email" className="my-3">
-          <Form.Label> Email Address</Form.Label>
+          <Form.Label> Dirección de email</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
@@ -76,7 +76,7 @@ const LoginScreen = () => {
 
        <Row className="py-3">
           <Col>
-             New Customer? <Link to={redirect ? `/register?redirect=${redirect}`: '/register'}>Register</Link>
+             ¿Nuevo cliente? <Link to={redirect ? `/register?redirect=${redirect}`: '/register'}>Registrar</Link>
           </Col>
        </Row>
     </FormContainer>

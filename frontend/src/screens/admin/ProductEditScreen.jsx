@@ -67,7 +67,7 @@ const ProductEditScreen = () => {
         description,
         countInStock,
       }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
-      toast.success("Product updated");
+      toast.success("Producto actualizado");
       refetch();
       navigate("/admin/productlist");
     } catch (err) {
@@ -75,52 +75,6 @@ const ProductEditScreen = () => {
     }
   };
 
-  /*
-    const submitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      await updateProduct({
-        productId,
-        name,
-        price,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-      }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
-      toast.success("Product updated");
-      refetch();
-      navigate("/admin/productlist");
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
-    }
-  };
-  */
-
-  /*
-const submitHandler = async (e) =>{
-    e.preventDefault();
-    const updatedProduct = {
-        productId,
-        name,
-        price,
-        image,
-        brand,
-        category,
-        countInStock,
-        description,
-    }
-
-    const result = await updateProduct(updateProduct)
-    if(result.error){
-        toast.error(result.error)
-    }else{
-        toast.success('Product updated')
-        navigate('/admin/productlist')
-    }
-  }
-  */
 
   const uploadFileHandler = async (e) => {
     const formData = new FormData();
@@ -137,10 +91,10 @@ const submitHandler = async (e) =>{
   return (
     <>
       <Link to="/admin/productlist" className="btn btn-light my-3">
-        Go Back
+        Regresar
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1>Editar producto</h1>
         {loadingUpdate && <Loader />}
 
         {isLoading ? (
@@ -150,10 +104,10 @@ const submitHandler = async (e) =>{
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter name"
+                placeholder="Ingresar nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
@@ -163,7 +117,7 @@ const submitHandler = async (e) =>{
               <Form.Control
                 type="number"
                 step="0.01" // Esto permite la entrada de decimales
-                placeholder="Enter price"
+                placeholder="Ingresar precio"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               ></Form.Control>
@@ -173,12 +127,12 @@ const submitHandler = async (e) =>{
               <Form.Label>Image</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter image url"
+                placeholder="Ingresar imagen"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
               <Form.Control
-                label="Choose File"
+                label="Elegir archivo"
                 onChange={uploadFileHandler}
                 type="file"
               ></Form.Control>
@@ -186,27 +140,27 @@ const submitHandler = async (e) =>{
             {loadingUpload && <Loader />}
 
             <Form.Group controlId="brand" className="my-2">
-              <Form.Label>Brand</Form.Label>
+              <Form.Label>Marca</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter brand"
+                placeholder="Ingresar marca"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="countInStock" className="my-2">
-              <Form.Label>Count In Stock</Form.Label>
+              <Form.Label>Stock</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter countInStock"
+                placeholder="Ingresar stock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="category" className="my-2">
-              <Form.Label>Category</Form.Label>
+              <Form.Label>Categoría</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter category"
@@ -216,10 +170,10 @@ const submitHandler = async (e) =>{
             </Form.Group>
 
             <Form.Group controlId="description" className="my-2">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Descripción</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter description"
+                placeholder="Ingresar descripción"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>

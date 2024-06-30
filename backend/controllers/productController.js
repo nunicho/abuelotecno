@@ -29,7 +29,7 @@ const getProductsById = asyncHandler(async (req, res) => {
     return res.json(product);
   } else {
     res.status(404);
-    throw new Error("Resource not found");
+    throw new Error("Recurso no encontrado");
   }
 });
 
@@ -38,15 +38,15 @@ const getProductsById = asyncHandler(async (req, res) => {
 // @access   Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
-    name: "Sample name",
+    name: "Nombre genérico",
     price: 0,
     user: req.user._id,
     image: "/images/sample.jpg",
-    brand: "Sample brand",
-    category: "Sample category",
+    brand: "Marca genérica",
+    category: "Categoría genérica",
     countInStock: 0,
     numReviews: 0,
-    description: "Sample description",
+    description: "Descripción genérica",
   });
 
   const createdProduct = await product.save();
@@ -74,7 +74,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     res.json(updatedProduct);
   } else {
     res.status(404);
-    throw new Error("Resource not found");
+    throw new Error("Recurso no encontrado");
   }
 });
 
@@ -86,10 +86,10 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
   if (product) {
     await Product.deleteOne({ _id: product._id });
-    res.status(200).json({ message: "Product deleted" });
+    res.status(200).json({ message: "Producto borrado" });
   } else {
     res.status(404);
-    throw new Error("Resource not found");
+    throw new Error("Recurso no encontrado");
   }
 });
 
@@ -107,7 +107,7 @@ const createProductReview = asyncHandler(async (req, res) => {
     );
     if (alreadyReviewed) {
       res.status(400);
-      throw new Error("Product already reviewed");
+      throw new Error("Producto ya reseñado");
     }
     const review = {
       name: req.user.name,
@@ -125,10 +125,10 @@ const createProductReview = asyncHandler(async (req, res) => {
       product.reviews.length;
 
     await product.save();
-    res.status(201).json({ message: "Review added" });
+    res.status(201).json({ message: "Reseña añadida" });
   } else {
     res.status(404);
-    throw new Error("Resource not found");
+    throw new Error("Recurso no encontrado");
   }
 });
 

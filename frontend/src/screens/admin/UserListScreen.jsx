@@ -27,10 +27,10 @@ const UserListScreen = () => {
   }, [location.state, refetch]);
 
   const deleteHandler = async (id) => {
-    if (window.confirm("Are you sure?")) {
+    if (window.confirm("¿Está seguro?")) {
       try {
         await deleteUser(id);
-        toast.success("User deleted");
+        toast.success("Usuario borrado");
         refetch();
       } catch (err) {
         toast.error(err?.data?.message || err.error);
@@ -51,7 +51,7 @@ const UserListScreen = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>NAME</th>
+              <th>NOMBRE</th>
               <th>EMAIL</th>
               <th>ADMIN</th>
               <th></th>

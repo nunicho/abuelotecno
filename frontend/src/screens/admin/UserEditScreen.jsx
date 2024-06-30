@@ -39,7 +39,7 @@ const UserEditScreen = () => {
     e.preventDefault();
     try {
       await updateUser({ userId, name, email, isAdmin });
-      toast.success("User updated successfully");
+      toast.success("Usuario actualizado exitosamente");
       refetch()
       navigate("/admin/userlist", { state: { refetch: true } });
     } catch (err) {
@@ -63,7 +63,7 @@ const UserEditScreen = () => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter name"
@@ -72,7 +72,7 @@ const UserEditScreen = () => {
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="email" className="my-2">
-              <Form.Label>Email Address</Form.Label>
+              <Form.Label>Dirección email</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Enter Email"
@@ -91,7 +91,7 @@ const UserEditScreen = () => {
             </Form.Group>
 
             <Button type="submit" variant="primary" className="my-2">
-              Update
+              Actualizar
             </Button>
           </Form>
         )}

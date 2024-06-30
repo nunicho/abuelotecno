@@ -62,7 +62,7 @@ const ProfileScreen = () => {
 
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name" className="my-2">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="name"
               placeholder="Enter name"
@@ -72,7 +72,7 @@ const ProfileScreen = () => {
           </Form.Group>
 
           <Form.Group controlId="email" className="my-2">
-            <Form.Label>Email Address</Form.Label>
+            <Form.Label>Dirección de email</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -92,7 +92,7 @@ const ProfileScreen = () => {
           </Form.Group>
 
           <Form.Group controlId="confirmPassword" className="my-2">
-            <Form.Label>Confirm Password</Form.Label>
+            <Form.Label>Confirmar password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Confirm password"
@@ -107,7 +107,7 @@ const ProfileScreen = () => {
         </Form>
       </Col>
       <Col md={9}>
-        <h2>My Orders</h2>
+        <h2>Mis órdenes</h2>
         {isLoading ? (
           <Loader />
         ) : error ? (
@@ -119,10 +119,10 @@ const ProfileScreen = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>DATE</th>
+                <th>FECHA</th>
                 <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
+                <th>PAGADA</th>
+                <th>ENVIADA</th>
                 <th></th>
               </tr>
             </thead>
@@ -149,7 +149,7 @@ const ProfileScreen = () => {
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
                         <Button className="btn-sm" variant='light'>
-                            Details
+                            Detalles
                         </Button>
                     </LinkContainer>
                   </td>

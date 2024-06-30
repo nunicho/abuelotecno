@@ -29,10 +29,10 @@ const ProductListScreen = () => {
   const [deleteProduct, {isLoading: loadingDelete}] = useDeleteProductMutation()
 
   const deleteHandler = async (id) => {
-    if(window.confirm('Are you sure?')){
+    if(window.confirm('Está seguro?')){
       try {
         await deleteProduct(id);
-        toast.success('Product deleted')
+        toast.success('Producto borrado')
         refetch();        
       } catch (err) {
         toast.error(err?.data?.message || err.error)
@@ -43,7 +43,7 @@ const ProductListScreen = () => {
 
   // IDEA PARA AGREGAR, MOSTRAR STOCK EN LA SCREEN
   const createProductHandler = async () => {
-    if (window.confirm("Are you sure you want to create a new product?")) {
+    if (window.confirm("¿Está seguro que quiere crear un nuevo producto?")) {
       // Probar usar sweet alert
       try {
         await createProduct();
@@ -62,7 +62,7 @@ const ProductListScreen = () => {
         </Col>
         <Col className="text-end">
           <Button className="btn-sm m-3" onClick={createProductHandler}>
-            <FaEdit /> Create Product
+            <FaEdit /> Crear producto
           </Button>
         </Col>
       </Row>
@@ -80,10 +80,10 @@ const ProductListScreen = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>NAME</th>
-                <th>PRICE</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
+                <th>NOMBRE</th>
+                <th>PRECIO</th>
+                <th>CATEGORIA</th>
+                <th>MARCA</th>
                 {/* <th>STOCK</th> */}
                 <th></th>
               </tr>
