@@ -193,8 +193,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
-  console.log(`El password anterior es: ${user.password}`)
-
   if (!user) {
     res.status(404);
     throw new Error("Usuario no encontrado");
@@ -202,12 +200,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const resetToken = generateResetToken(user);
 
-
   user.reset_password_token = resetToken;
   user.reset_password_expires = Date.now() + 3600000;
   await user.save();
-
-  console.log(`El token de forgotPassword es: ${resetToken}`);
 
   try {
     await sendResetPasswordEmail(email, resetToken);
@@ -221,11 +216,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
 const resetPassword = asyncHandler(async (req, res) => {
   const { token, newPassword } = req.body;
 
-  console.log(`Token recibido en el backend: ${token}`);
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(`Token decodificado: ${JSON.stringify(decoded)}`);
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -233,9 +225,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     }
 
     if (user.reset_password_token !== token) {
-      console.log(
-        `Token almacenado en el usuario: ${user.reset_password_token}`
-      );
       return res.status(400).json({ message: "Token inválido" });
     }
 

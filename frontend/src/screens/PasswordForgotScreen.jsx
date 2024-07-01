@@ -13,9 +13,11 @@ const PasswordForgotScreen = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+   e.preventDefault();
     try {
-      const { data } = await forgotPassword({ email }).unwrap();
+      //const { data } = await forgotPassword({ email }).unwrap();
+      // toast.success(`Email enviado a ${data.email}`); // Mostrar notificación de éxito
+      const data  = await forgotPassword({ email }).unwrap();
       toast.success(data.message);
       navigate("/login");
     } catch (error) {

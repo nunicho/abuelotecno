@@ -21,8 +21,6 @@ const PasswordResetScreen = () => {
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
 
-  console.log(`Token obtenido del enlace: ${token}`);
-
   const submitHandler = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -30,8 +28,8 @@ const PasswordResetScreen = () => {
       return;
     }
     try {
-      const { data } = await resetPassword({ token, newPassword }).unwrap();
-      toast.success(data.message);
+      const  data  = await resetPassword({ token, newPassword }).unwrap();
+      toast.success(data.message); // Mostrar notificación de éxito
       navigate("/login");
     } catch (error) {
       toast.error(error?.data?.message || error.error);
