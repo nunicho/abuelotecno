@@ -10,17 +10,33 @@ import {
   useGetProductDetailQuery,
   useUploadProductImageMutation,
 } from "../../slices/productsApiSlice";
+import {
+  validateName,
+  validatePrice,
+  validateDescription,
+  validateImage,
+  validateBrand,
+  validateCategory,
+  validateCountInStock,
+} from "../../utils/productEditValidation";
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams();
 
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
   const [price, setPrice] = useState(0);
+  const [priceError, setPriceError] = useState("");
   const [image, setImage] = useState("");
+  const [imageError, setImageError] = useState("");
   const [brand, setBrand] = useState("");
+  const [brandError, setBrandError] = useState("");
   const [category, setCategory] = useState("");
+  const [categoryError, setCategoryError] = useState("");
   const [countInStock, setCountInStock] = useState(0);
+  const [countInStockError, setCountInStockError] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
 
   const {
     data: product,
@@ -49,10 +65,96 @@ const ProductEditScreen = () => {
     }
   }, [product]);
 
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setName(value);
+    // Validación del nombre
+    const errorMessage = validateName(value);
+    setNameError(errorMessage);
+  };
+
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    setPrice(value);
+    // Validación del precio
+    const errorMessage = validatePrice(value);
+    setPriceError(errorMessage);
+  };
+
+  const handleDescriptionChange = (e) => {
+    const value = e.target.value;
+    setDescription(value);
+    // Validación de la descripción
+    const errorMessage = validateDescription(value);
+    setDescriptionError(errorMessage);
+  };
+
+  const handleImageChange = (e) => {
+    const value = e.target.value;
+    setImage(value);
+    // Validación de la imagen
+    const errorMessage = validateImage(value);
+    setImageError(errorMessage);
+  };
+
+  const handleBrandChange = (e) => {
+    const value = e.target.value;
+    setBrand(value);
+    // Validación de la marca
+    const errorMessage = validateBrand(value);
+    setBrandError(errorMessage);
+  };
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setCategory(value);
+    // Validación de la categoría
+    const errorMessage = validateCategory(value);
+    setCategoryError(errorMessage);
+  };
+
+  const handleCountInStockChange = (e) => {
+    const value = e.target.value;
+    setCountInStock(value);
+    // Validación del stock
+    const errorMessage = validateCountInStock(value);
+    setCountInStockError(errorMessage);
+  };
+
   const submitHandler = async (e) => {
     const formattedPrice = parseFloat(price).toFixed(2);
 
     e.preventDefault();
+
+    // Validar todos los campos antes de enviar la solicitud
+    const nameError = validateName(name);
+    const priceError = validatePrice(price);
+    const imageError = validateImage(image);
+    const brandError = validateBrand(brand);
+    const categoryError = validateCategory(category);
+    const countInStockError = validateCountInStock(countInStock);
+    const descriptionError = validateDescription(description);
+
+    if (
+      nameError ||
+      priceError ||
+      imageError ||
+      brandError ||
+      categoryError ||
+      countInStockError ||
+      descriptionError
+    ) {
+      // Si hay errores, no enviamos la solicitud
+      setNameError(nameError);
+      setPriceError(priceError);
+      setImageError(imageError);
+      setBrandError(brandError);
+      setCategoryError(categoryError);
+      setCountInStockError(countInStockError);
+      setDescriptionError(descriptionError);
+      return;
+    }
+
     try {
       await updateProduct({
         productId,
@@ -105,28 +207,43 @@ const ProductEditScreen = () => {
                 type="text"
                 placeholder="Ingresar nombre"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
               ></Form.Control>
+              {nameError && (
+                <Message variant="danger" className="mt-1">
+                  {nameError}
+                </Message>
+              )}
             </Form.Group>
             <Form.Group controlId="price" className="my-2">
-              <Form.Label>Price</Form.Label>
+              <Form.Label>Precio</Form.Label>
               <Form.Control
                 type="number"
                 step="0.01" // Esto permite la entrada de decimales
                 placeholder="Ingresar precio"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handlePriceChange}
               ></Form.Control>
+              {priceError && (
+                <Message variant="danger" className="mt-1">
+                  {priceError}
+                </Message>
+              )}
             </Form.Group>
 
             <Form.Group controlId="image" className="my-2">
-              <Form.Label>Image</Form.Label>
+              <Form.Label>Imagen</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Ingresar imagen"
                 value={image}
-                onChange={(e) => setImage(e.target.value)}
+                onChange={handleImageChange}
               ></Form.Control>
+              {imageError && (
+                <Message variant="danger" className="mt-1">
+                  {imageError}
+                </Message>
+              )}
               <Form.Control
                 label="Elegir archivo"
                 onChange={uploadFileHandler}
@@ -141,8 +258,13 @@ const ProductEditScreen = () => {
                 type="text"
                 placeholder="Ingresar marca"
                 value={brand}
-                onChange={(e) => setBrand(e.target.value)}
+                onChange={handleBrandChange}
               ></Form.Control>
+              {brandError && (
+                <Message variant="danger" className="mt-1">
+                  {brandError}
+                </Message>
+              )}
             </Form.Group>
 
             <Form.Group controlId="countInStock" className="my-2">
@@ -151,32 +273,47 @@ const ProductEditScreen = () => {
                 type="number"
                 placeholder="Ingresar stock"
                 value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
+                onChange={handleCountInStockChange}
               ></Form.Control>
+              {countInStockError && (
+                <Message variant="danger" className="mt-1">
+                  {countInStockError}
+                </Message>
+              )}
             </Form.Group>
 
             <Form.Group controlId="category" className="my-2">
               <Form.Label>Categoría</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter category"
+                placeholder="Ingresar categoría"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleCategoryChange}
               ></Form.Control>
+              {categoryError && (
+                <Message variant="danger" className="mt-1">
+                  {categoryError}
+                </Message>
+              )}
             </Form.Group>
 
             <Form.Group controlId="description" className="my-2">
               <Form.Label>Descripción</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
                 placeholder="Ingresar descripción"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={handleDescriptionChange}
               ></Form.Control>
+              {descriptionError && (
+                <Message variant="danger" className="mt-1">
+                  {descriptionError}
+                </Message>
+              )}
             </Form.Group>
 
             <Button type="submit" variant="primary" className="my-2">
-              Update
+              Actualizar
             </Button>
           </Form>
         )}
