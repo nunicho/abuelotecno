@@ -2,7 +2,6 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 import jwt from "jsonwebtoken"
-import bcrypt from "bcryptjs";
 import {
   generateResetToken,
   sendResetPasswordEmail,
@@ -190,8 +189,6 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 
-
-
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -221,6 +218,87 @@ const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  console.log(`Token recibido en el backend: ${token}`);
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(`Token decodificado: ${JSON.stringify(decoded)}`);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (user.reset_password_token !== token) {
+      console.log(
+        `Token almacenado en el usuario: ${user.reset_password_token}`
+      );
+      return res.status(400).json({ message: "Token inválido" });
+    }
+
+    if (user.reset_password_expires < Date.now()) {
+      return res.status(400).json({ message: "Token expirado" });
+    }
+
+    user.password = newPassword;
+    user.reset_password_token = undefined;
+    user.reset_password_expires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Contraseña restablecida con éxito" });
+  } catch (error) {
+    console.error(`Error al verificar el token: ${error.message}`);
+    res.status(400).json({ message: "Token inválido o expirado" });
+  }
+});
+
+export {
+  authUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+  forgotPassword,
+  resetPassword,
+};
+
+
+/*
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  console.log(`El password anterior es: ${user.password}`)
+
+  if (!user) {
+    res.status(404);
+    throw new Error("Usuario no encontrado");
+  }
+
+  const resetToken = generateResetToken(user);
+
+  // Almacena el token y la fecha de expiración en el usuario
+  user.reset_password_token = resetToken;
+  user.reset_password_expires = Date.now() + 3600000; // 1 hora de expiración, ajusta según tus necesidades
+  await user.save();
+
+  console.log(`El token de forgotPassword es: ${resetToken}`);
+
+  try {
+    await sendResetPasswordEmail(email, resetToken);
+    res.json({ message: "Enlace de restablecimiento de contraseña enviado" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al enviar el correo electrónico" });
+  }
+});
 
 
 const resetPassword = asyncHandler(async (req, res) => {
@@ -261,81 +339,4 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
-export {
-  authUser,
-  registerUser,
-  logoutUser,
-  getUserProfile,
-  updateUserProfile,
-  getUsers,
-  deleteUser,
-  getUserById,
-  updateUser,
-  forgotPassword,
-  resetPassword,
-};
-
-
-/*
-
-const forgotPassword = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    res.status(404);
-    throw new Error("Usuario no encontrado");
-  }
-
-  const resetToken = generateResetToken(user);
-
-  console.log(`El token de forgotPassword es: ${resetToken}`)
-
-  try {
-    await sendResetPasswordEmail(email, resetToken);
-    res.json({ message: "Enlace de restablecimiento de contraseña enviado" });
-  } catch (error) {
-    res.status(500).json({ message: "Error al enviar el correo electrónico" });
-  }
-});
-
-
-
-
-
-// Función para restablecer la contraseña
-const resetPassword = asyncHandler(async (req, res) => {
-  const { token, newPassword } = req.body;
-
-  console.log( `El token de resetPassword es  ${req.body.token}`)
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    // Verifica si el token de restablecimiento de contraseña es el mismo almacenado en el usuario
-    if (user.reset_password_token !== token) {
-      return res.status(400).json({ message: "Token inválido" });
-    }
-
-    // Verifica si el token ha expirado
-    if (user.reset_password_expires < Date.now()) {
-      return res.status(400).json({ message: "Token expirado" });
-    }
-
-    // Si todo está bien, procede a actualizar la contraseña del usuario
-    user.password = await bcrypt.hash(newPassword, 10);
-    user.reset_password_token = undefined;
-    user.reset_password_expires = undefined;
-    await user.save();
-
-    res.json({ message: "Contraseña restablecida con éxito" });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: "Token inválido o expirado" });
-  }
-});
 */

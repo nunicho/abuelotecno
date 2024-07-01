@@ -21,6 +21,8 @@ const PasswordResetScreen = () => {
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
 
+  console.log(`Token obtenido del enlace: ${token}`);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {

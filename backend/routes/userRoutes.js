@@ -18,8 +18,8 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 
 
 
-router.post("/forgotPassword", forgotPassword); // Ruta para solicitar restablecimiento de contraseña
-router.post("/resetPassword",  resetPassword); // Ruta para restablecer la contraseña
+  router.post("/forgotPassword", forgotPassword); // Ruta para solicitar restablecimiento de contraseña
+  router.post("/resetPassword",  resetPassword); // Ruta para restablecer la contraseña
 
 
 
