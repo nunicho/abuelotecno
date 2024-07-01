@@ -15,6 +15,7 @@ mongodb+srv://contaalonso:SaixavweJjJV0GNp@cluster0.gbmanrl.mongodb.net/abuelote
 // Paginate: crear un query distinto en backend (u otro mecanismo) para que listproducts en admin traiga más de 4
 // Frontend: Mejorar el carousel, especialmente donde se ve el cuadrado gris
 // Frontend: favicon,  incluso poner favicon en el componente Meta
+// Frontend y Backend: hacer validaciones
 
 Paypal:
 

@@ -188,7 +188,9 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-
+// @desc     Request link to change password
+// @route    PUT /api/users/forgotPassword
+// @access   Public
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -212,7 +214,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
-
+// @desc     Use JWT token to reset password
+// @route    PUT /api/users/resetPassword
+// @access   Public
 const resetPassword = asyncHandler(async (req, res) => {
   const { token, newPassword } = req.body;
 

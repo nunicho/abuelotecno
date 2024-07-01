@@ -14,11 +14,30 @@ import {
   resetPassword,
 } from "../controllers/userController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
+import {
+  validateUserRegistration,
+  validateForgotPassword,
+  validateResetPassword,
+  handleValidationErrors,
+} from "../middleware/validations/userValidation.js";
 
-router.post("/forgotPassword", forgotPassword); 
-  router.post("/resetPassword",  resetPassword); 
+router.post(
+  "/forgotPassword",
+  validateForgotPassword,
+  handleValidationErrors,
+  forgotPassword
+); 
+  router.post(
+    "/resetPassword",
+    validateResetPassword,
+    handleValidationErrors,
+    resetPassword
+  ); 
 
-router.route("/").post(registerUser).get(protect, admin, getUsers);
+router
+  .route("/")
+  .post(validateUserRegistration, handleValidationErrors, registerUser)
+  .get(protect, admin, getUsers);
 router.post("/logout", logoutUser);
 router.post("/auth", authUser);
 router
