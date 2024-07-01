@@ -68,7 +68,6 @@ const ProductEditScreen = () => {
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
-    // Validación del nombre
     const errorMessage = validateName(value);
     setNameError(errorMessage);
   };
@@ -76,7 +75,6 @@ const ProductEditScreen = () => {
   const handlePriceChange = (e) => {
     const value = e.target.value;
     setPrice(value);
-    // Validación del precio
     const errorMessage = validatePrice(value);
     setPriceError(errorMessage);
   };
@@ -84,7 +82,6 @@ const ProductEditScreen = () => {
   const handleDescriptionChange = (e) => {
     const value = e.target.value;
     setDescription(value);
-    // Validación de la descripción
     const errorMessage = validateDescription(value);
     setDescriptionError(errorMessage);
   };
@@ -92,7 +89,6 @@ const ProductEditScreen = () => {
   const handleImageChange = (e) => {
     const value = e.target.value;
     setImage(value);
-    // Validación de la imagen
     const errorMessage = validateImage(value);
     setImageError(errorMessage);
   };
@@ -100,7 +96,6 @@ const ProductEditScreen = () => {
   const handleBrandChange = (e) => {
     const value = e.target.value;
     setBrand(value);
-    // Validación de la marca
     const errorMessage = validateBrand(value);
     setBrandError(errorMessage);
   };
@@ -108,7 +103,6 @@ const ProductEditScreen = () => {
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setCategory(value);
-    // Validación de la categoría
     const errorMessage = validateCategory(value);
     setCategoryError(errorMessage);
   };
@@ -116,7 +110,6 @@ const ProductEditScreen = () => {
   const handleCountInStockChange = (e) => {
     const value = e.target.value;
     setCountInStock(value);
-    // Validación del stock
     const errorMessage = validateCountInStock(value);
     setCountInStockError(errorMessage);
   };
@@ -126,7 +119,6 @@ const ProductEditScreen = () => {
 
     e.preventDefault();
 
-    // Validar todos los campos antes de enviar la solicitud
     const nameError = validateName(name);
     const priceError = validatePrice(price);
     const imageError = validateImage(image);
@@ -144,7 +136,6 @@ const ProductEditScreen = () => {
       countInStockError ||
       descriptionError
     ) {
-      // Si hay errores, no enviamos la solicitud
       setNameError(nameError);
       setPriceError(priceError);
       setImageError(imageError);
@@ -165,7 +156,7 @@ const ProductEditScreen = () => {
         category,
         description,
         countInStock,
-      }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+      }).unwrap();
       toast.success("Producto actualizado");
       refetch();
       navigate("/admin/productlist");
@@ -181,8 +172,12 @@ const ProductEditScreen = () => {
       const res = await uploadProductImage(formData).unwrap();
       toast.success(res.message);
       setImage(res.image);
+      setImageError(""); // Limpiar el error de imagen después de una carga exitosa
     } catch (err) {
       toast.error(err?.data?.message || err.error);
+    } finally {
+      // Limpiar el valor del input de tipo archivo para eliminar el nombre del archivo seleccionado
+      e.target.value = null;
     }
   };
 
@@ -208,7 +203,7 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar nombre"
                 value={name}
                 onChange={handleNameChange}
-              ></Form.Control>
+              />
               {nameError && (
                 <Message variant="danger" className="mt-1">
                   {nameError}
@@ -219,11 +214,11 @@ const ProductEditScreen = () => {
               <Form.Label>Precio</Form.Label>
               <Form.Control
                 type="number"
-                step="0.01" // Esto permite la entrada de decimales
+                step="0.01"
                 placeholder="Ingresar precio"
                 value={price}
                 onChange={handlePriceChange}
-              ></Form.Control>
+              />
               {priceError && (
                 <Message variant="danger" className="mt-1">
                   {priceError}
@@ -238,17 +233,17 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar imagen"
                 value={image}
                 onChange={handleImageChange}
-              ></Form.Control>
+              />
+              <Form.Control
+                label="Elegir archivo"
+                onChange={uploadFileHandler}
+                type="file"
+              />
               {imageError && (
                 <Message variant="danger" className="mt-1">
                   {imageError}
                 </Message>
               )}
-              <Form.Control
-                label="Elegir archivo"
-                onChange={uploadFileHandler}
-                type="file"
-              ></Form.Control>
             </Form.Group>
             {loadingUpload && <Loader />}
 
@@ -259,7 +254,7 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar marca"
                 value={brand}
                 onChange={handleBrandChange}
-              ></Form.Control>
+              />
               {brandError && (
                 <Message variant="danger" className="mt-1">
                   {brandError}
@@ -274,7 +269,7 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar stock"
                 value={countInStock}
                 onChange={handleCountInStockChange}
-              ></Form.Control>
+              />
               {countInStockError && (
                 <Message variant="danger" className="mt-1">
                   {countInStockError}
@@ -289,7 +284,7 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar categoría"
                 value={category}
                 onChange={handleCategoryChange}
-              ></Form.Control>
+              />
               {categoryError && (
                 <Message variant="danger" className="mt-1">
                   {categoryError}
@@ -304,7 +299,7 @@ const ProductEditScreen = () => {
                 placeholder="Ingresar descripción"
                 value={description}
                 onChange={handleDescriptionChange}
-              ></Form.Control>
+              />
               {descriptionError && (
                 <Message variant="danger" className="mt-1">
                   {descriptionError}
