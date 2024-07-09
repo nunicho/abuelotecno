@@ -33,6 +33,21 @@ const addOrderItems = asyncHandler(async (req, res) => {
     };
   });
 
+  // Check if there is enough stock for each item
+  for (const item of dbOrderItems) {
+    const product = itemsFromDB.find((p) => p._id.toString() === item.product);
+    if (!product) {
+      res.status(404);
+      throw new Error(`Producto no encontrado con id ${item.product}`);
+    }
+    if (product.countInStock < item.qty) {
+      res.status(400);
+      throw new Error(
+        `No hay suficiente stock para el producto ${product.name}`
+      );
+    }
+  }
+
   // calculate prices
   const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
     calcPrices(dbOrderItems);
@@ -44,6 +59,14 @@ const addOrderItems = asyncHandler(async (req, res) => {
       if (!product) {
         res.status(404);
         throw new Error(`Producto no encontrado con id ${item.product}`);
+      }
+
+      // Verificar nuevamente el stock antes de restar
+      if (product.countInStock < item.qty) {
+        res.status(400);
+        throw new Error(
+          `No hay suficiente stock para el producto ${product.name}`
+        );
       }
 
       product.countInStock -= item.qty; // Resta la cantidad ordenada
