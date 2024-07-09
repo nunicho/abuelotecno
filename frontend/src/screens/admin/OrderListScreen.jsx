@@ -1,18 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { FaTimes } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
+import {
+  useGetOrdersQuery,
+  useDeleteOrderMutation,
+} from "../../slices/ordersApiSlice";
 
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const [deleteOrder, { isLoading: deleteLoading }] = useDeleteOrderMutation();
+  const [updatedOrders, setUpdatedOrders] = useState([]);
+
+  useEffect(() => {
+    if (orders) {
+      setUpdatedOrders(orders);
+    }
+  }, [orders]);
+
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm("¿Estás seguro de eliminar esta orden?")) {
+      try {
+        await deleteOrder(orderId);
+        const updatedOrdersList = updatedOrders.filter(
+          (order) => order._id !== orderId
+        );
+        setUpdatedOrders(updatedOrdersList);
+      } catch (error) {
+        console.error("Error al eliminar la orden:", error);
+      }
+    }
+  };
 
   return (
     <>
-      <h1>Ordenes</h1>
+      <h1>Órdenes</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -27,11 +52,11 @@ const OrderListScreen = () => {
               <th>TOTAL</th>
               <th>PAGADA</th>
               <th>ENTREGADA</th>
-              <th></th>
+              <th>ACCIONES</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {updatedOrders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
@@ -53,10 +78,18 @@ const OrderListScreen = () => {
                 </td>
                 <td>
                   <LinkContainer to={`/order/${order._id}`}>
-                    <Button variant='light' className="btn-sm">
+                    <Button variant="light" className="btn-sm">
                       Detalles
                     </Button>
                   </LinkContainer>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => handleDeleteOrder(order._id)}
+                    disabled={deleteLoading}
+                  >
+                    Eliminar
+                  </Button>
                 </td>
               </tr>
             ))}

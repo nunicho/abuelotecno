@@ -94,55 +94,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
 });
 
 
-
-/*
-const addOrderItems = asyncHandler(async (req, res) => {
-  const { orderItems, shippingAddress, paymentMethod } = req.body;
-
-  if (orderItems && orderItems.length === 0) {
-    res.status(400);
-    throw new Error("No se ordenaron ítems");
-  } else {
-    // get the ordered items from our database
-    const itemsFromDB = await Product.find({
-      _id: { $in: orderItems.map((x) => x._id) },
-    });
-
-    // map over the order items and use the price from our items from database
-    const dbOrderItems = orderItems.map((itemFromClient) => {
-      const matchingItemFromDB = itemsFromDB.find(
-        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
-      );
-      return {
-        ...itemFromClient,
-        product: itemFromClient._id,
-        price: matchingItemFromDB.price,
-        _id: undefined,
-      };
-    });
-
-    // calculate prices
-    const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
-      calcPrices(dbOrderItems);
-
-    const order = new Order({
-      orderItems: dbOrderItems,
-      user: req.user._id,
-      shippingAddress,
-      paymentMethod,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    });
-
-    const createdOrder = await order.save();
-
-    res.status(201).json(createdOrder);
-  }
-});
-*/
-
 // @desc     Get logged in user orders
 // @route    GET /api/orders/myorders
 // @access   Private
@@ -228,6 +179,31 @@ const getOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders)
 });
 
+
+// @desc     Delete order and restock items
+// @route    DELETE /api/orders/:id
+// @access   Private/Admin
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Orden no encontrada');
+  }
+
+  // Restock items
+  for (const item of order.orderItems) {
+    const product = await Product.findById(item.product);
+    if (product) {
+      product.countInStock += item.qty;
+      await product.save();
+    }
+  }
+
+  await order.remove();
+  res.status(200).json({ message: 'Orden eliminada y stock restituido' });
+});
+
 export {
   addOrderItems,
   getMyOrders,
@@ -235,4 +211,5 @@ export {
   updateOrderToPaid,
   updateOrderToDelivered,
   getOrders,
+  deleteOrder,
 };
