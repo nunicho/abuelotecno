@@ -13,6 +13,72 @@ const addOrderItems = asyncHandler(async (req, res) => {
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error("No se ordenaron ítems");
+  }
+
+  // get the ordered items from our database
+  const itemsFromDB = await Product.find({
+    _id: { $in: orderItems.map((x) => x._id) },
+  });
+
+  // map over the order items and use the price from our items from database
+  const dbOrderItems = orderItems.map((itemFromClient) => {
+    const matchingItemFromDB = itemsFromDB.find(
+      (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
+    );
+    return {
+      ...itemFromClient,
+      product: itemFromClient._id,
+      price: matchingItemFromDB.price,
+      // Remove _id: undefined,
+    };
+  });
+
+  // calculate prices
+  const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
+    calcPrices(dbOrderItems);
+
+  try {
+    // Update stock for each product
+    for (const item of dbOrderItems) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        res.status(404);
+        throw new Error(`Producto no encontrado con id ${item.product}`);
+      }
+
+      product.countInStock -= item.qty; // Resta la cantidad ordenada
+      await product.save();
+    }
+
+    // Create order
+    const order = new Order({
+      orderItems: dbOrderItems,
+      user: req.user._id,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    });
+
+    const createdOrder = await order.save();
+
+    res.status(201).json(createdOrder);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+/*
+const addOrderItems = asyncHandler(async (req, res) => {
+  const { orderItems, shippingAddress, paymentMethod } = req.body;
+
+  if (orderItems && orderItems.length === 0) {
+    res.status(400);
+    throw new Error("No se ordenaron ítems");
   } else {
     // get the ordered items from our database
     const itemsFromDB = await Product.find({
@@ -52,6 +118,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     res.status(201).json(createdOrder);
   }
 });
+*/
 
 // @desc     Get logged in user orders
 // @route    GET /api/orders/myorders

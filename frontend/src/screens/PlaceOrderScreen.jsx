@@ -182,7 +182,7 @@ const PlaceOrderScreen = () => {
 
   const cart = useSelector((state) => state.cart);
 
-  const [createOrder, {isLoading, error}] = useCreateOrderMutation()
+  const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
@@ -193,23 +193,23 @@ const PlaceOrderScreen = () => {
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
   const dispatch = useDispatch();
-  const placeOrderHandler = async () =>{
-      try {
+  const placeOrderHandler = async () => {
+    try {
       const res = await createOrder({
-        orderItems: cart.cartItems, 
+        orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice
+        totalPrice: cart.totalPrice,
       }).unwrap();
-      dispatch(clearCartItems())
-      navigate(`/order/${res._id}`)
-      } catch (err) {
-          toast.error(err);
-      }
-  }
+      dispatch(clearCartItems());
+      navigate(`/order/${res._id}`);
+    } catch (err) {
+      toast.error(err);
+    }
+  };
 
   return (
     <>
@@ -218,9 +218,9 @@ const PlaceOrderScreen = () => {
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h2>Shipping</h2>
+              <h2>Envío</h2>
               <p>
-                <strong>Address: </strong>
+                <strong>Dirección: </strong>
                 {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
                 {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
@@ -228,15 +228,15 @@ const PlaceOrderScreen = () => {
             </ListGroup.Item>
 
             <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
+              <h2>Método de pago</h2>
+              <strong>Método: </strong>
               {cart.paymentMethod}
             </ListGroup.Item>
 
             <ListGroup.Item>
-              <h2>Order Items</h2>
+              <h2>Items en la orden</h2>
               {cart.cartItems.length === 0 ? (
-                <Message>Your cart is empty</Message>
+                <Message>Tu carro está vacío</Message>
               ) : (
                 <ListGroup variant="flush">
                   {cart.cartItems.map((item, index) => (
@@ -256,8 +256,7 @@ const PlaceOrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = $
-                          {item.qty * item.price}
+                          {item.qty} x ${item.price} = ${item.qty * item.price}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -271,7 +270,7 @@ const PlaceOrderScreen = () => {
           <Card>
             <ListGroup variant="flush">
               <ListGroup.Item>
-                <h2>Order Summary</h2>
+                <h2>Detalle de la orden</h2>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
@@ -281,13 +280,13 @@ const PlaceOrderScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Shipping</Col>
+                  <Col>Envío</Col>
                   <Col>${cart.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Tax</Col>
+                  <Col>Impuestos</Col>
                   <Col>${cart.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
@@ -298,7 +297,10 @@ const PlaceOrderScreen = () => {
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
-                {error && <Message variant='danger'>{error}</Message>}
+                {error && (
+                  <Message variant="danger">{error.data.message}</Message>
+                )}
+               
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button
@@ -307,7 +309,7 @@ const PlaceOrderScreen = () => {
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >
-                  Place Order
+                  Generar orden
                 </Button>
                 {isLoading && <Loader />}
               </ListGroup.Item>
