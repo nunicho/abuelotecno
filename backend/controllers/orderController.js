@@ -188,10 +188,16 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
   if (!order) {
     res.status(404);
-    throw new Error('Orden no encontrada');
+    throw new Error("Orden no encontrada");
   }
 
-  // Restock items
+  // Verificar si la orden está marcada como expirada o implementar lógica adicional si es necesario
+  if (!order.isExpired) {
+    res.status(400);
+    throw new Error("Solo se pueden eliminar órdenes expiradas");
+  }
+
+  // Restituir el stock de los productos asociados a la orden
   for (const item of order.orderItems) {
     const product = await Product.findById(item.product);
     if (product) {
@@ -200,10 +206,11 @@ const deleteOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  await order.remove();
-  res.status(200).json({ message: 'Orden eliminada y stock restituido' });
+  await Order.deleteOne({ _id: order._id });
+  res.status(200).json({ message: "Orden eliminada y stock restituido" });
 });
 
+export default deleteOrder;
 export {
   addOrderItems,
   getMyOrders,
