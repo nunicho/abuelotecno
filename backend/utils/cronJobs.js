@@ -24,7 +24,7 @@ const updateExpiredOrders = async () => {
       },
       { isExpired: true }
     );
-    console.log("Ordenes actualizadas a isExpired = true");
+    //console.log("Ordenes actualizadas a isExpired = true");
   } catch (error) {
     console.error("Error actualizando ordenes expiradas:", error);
   }
