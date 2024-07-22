@@ -216,6 +216,41 @@ const deleteOrder = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Orden eliminada y stock restituido" });
 });
 
+// @desc     Cancel order and restock items
+// @route    DELETE /api/orders/:id/cancel
+// @access   Private
+const cancelOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error("Orden no encontrada");
+  }
+
+  // Verificar que la orden pertenece al usuario que realiza la petición
+  if (order.user.toString() !== req.user._id.toString()) {
+    res.status(401);
+    throw new Error("No autorizado para cancelar esta orden");
+  }
+
+  // Verificar si la orden está pagada
+  if (order.isPaid) {
+    res.status(400);
+    throw new Error("No se pueden cancelar órdenes pagadas");
+  }
+
+  // Restituir el stock de los productos asociados a la orden
+  for (const item of order.orderItems) {
+    const product = await Product.findById(item.product);
+    if (product) {
+      product.countInStock += item.qty;
+      await product.save();
+    }
+  }
+
+  await Order.deleteOne({ _id: order._id });
+  res.status(200).json({ message: "Orden cancelada y stock restituido" });
+});
 
 export default deleteOrder;
 export {
@@ -226,4 +261,5 @@ export {
   updateOrderToDelivered,
   getOrders,
   deleteOrder,
+  cancelOrder,
 };
