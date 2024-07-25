@@ -1,0 +1,41 @@
+.custom-card {
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro con opacidad */
+  border: 1px solid var(--color-pink);
+  color: var(--color-yellow);
+  text-align: center;
+  transition: background-color 0.3s ease; /* Transición suave para el hover */
+}
+
+.custom-card-img {
+  border-bottom: 1px solid var(--color-blue);
+}
+
+.custom-card-title {
+  color: var(--color-pink);
+  text-shadow: 2px 2px var(--color-dark-bg);
+}
+
+.custom-rating {
+  color: var(--color-yellow);
+}
+
+.custom-price {
+  color: var(--color-yellow);
+}
+
+.custom-card:hover {
+  background-color: rgba(255, 255, 255, 0.7); /* Fondo claro con opacidad */
+  color: var(--color-dark-purple);
+}
+
+.custom-card:hover .custom-card-title {
+  color: var(--color-pink);
+}
+
+.custom-card:hover .custom-price {
+  color: var(--color-dark-purple);
+}
+
+.custom-card:hover .custom-card-img {
+  border-bottom: 1px solid var(--color-pink);
+}

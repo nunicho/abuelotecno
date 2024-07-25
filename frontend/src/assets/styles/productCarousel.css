@@ -1,0 +1,31 @@
+.carousel-images-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  align-items: center;
+}
+
+.carousel-main-image,
+.carousel-additional-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carousel-main-image {
+  max-width: 100%;
+}
+
+.carousel-additional-image {
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .carousel-additional-image {
+    display: none;
+  }
+
+  .carousel-images-container {
+    grid-template-columns: 1fr; /* Make the main image take the full width */
+  }
+}

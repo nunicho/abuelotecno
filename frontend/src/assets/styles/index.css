@@ -1,3 +1,84 @@
+:root {
+  --color-yellow: #f8e825; /* Amarillo de la imagen */
+  --color-pink: #ec407a;   /* Rosa de la imagen */
+  --color-purple: #9c27b0; /* Púrpura de la imagen */
+  --color-blue: #42a5f5;   /* Azul de la imagen */
+  --color-dark-purple: #4a148c; /* Púrpura oscuro de la imagen */
+  --color-dark-bg: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+  --color-light-bg: rgba(255, 255, 255, 0.7); /* Fondo claro semi-transparente */
+}
+
+body {
+  background: url('../../../public/images/background.jpg') no-repeat center center fixed; /* Actualiza la ruta de la imagen */
+  background-size: cover;
+  color: var(--color-yellow);
+  font-family: Arial, sans-serif; /* Fuente predeterminada */
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-pink);
+  text-shadow: 2px 2px var(--color-blue);
+  background: var(--color-dark-bg); /* Fondo oscuro semi-transparente */
+  padding: 0.5rem;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+a {
+  color: var(--color-purple);
+}
+
+a:hover {
+  color: var(--color-pink);
+  text-shadow: 1px 1px var(--color-yellow);
+}
+
+.btn {
+  background-color: var(--color-blue);
+  border: none;
+  color: var(--color-yellow);
+  text-shadow: 1px 1px var(--color-dark-purple);
+}
+
+.btn:hover {
+  background-color: var(--color-pink);
+  color: var(--color-dark-purple);
+}
+
+.table {
+  background-color: var(--color-dark-purple);
+  color: var(--color-yellow);
+  border: 2px solid var(--color-blue);
+}
+
+.table th, .table td {
+  border: 1px solid var(--color-pink);
+}
+
+.table thead {
+  background-color: var(--color-blue);
+  color: var(--color-dark-purple);
+}
+
+.loader,
+.message {
+  color: var(--color-yellow);
+}
+
+.link-container .btn-light {
+  background-color: var(--color-purple);
+  color: var(--color-dark-purple);
+}
+
+.link-container .btn-light:hover {
+  background-color: var(--color-pink);
+  color: var(--color-dark-purple);
+}
+
 main {
   min-height: 80vh;
 }
@@ -7,7 +88,7 @@ main {
 }
 
 .rating svg {
-  color: #f8e825;
+  color: var(--color-yellow);
 }
 
 .rating-text {
@@ -56,3 +137,9 @@ table th {
   width: 50px; /* Ajusta el tamaño según tus necesidades */
   height: 50px; /* Ajusta el tamaño según tus necesidades */
 }
+
+
+
+
+
+

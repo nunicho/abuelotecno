@@ -12,8 +12,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import SearchBox from "./SearchBox";
-import logo from "../assets/logo.png";
+import logo from "../assets/Images/logo.png";
 import { resetCart } from "../slices/cartSlice";
+import "../assets/styles/header.css";
 
 
 const Header = () => {
@@ -39,7 +40,7 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
+      <Navbar className="header-navbar" expand="md" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>

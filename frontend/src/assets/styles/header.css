@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+
+.header-navbar {
+  background-color: rgba(156, 39, 176, 0.7); /* Púrpura semi-transparente */
+}
+
+.navbar-logo {
+  width: 60px; /* Tamaño original del contenedor del logo */
+  height: 60px; /* Tamaño original del contenedor del logo */
+  transform: scale(1.2); /* Escala la imagen al 120% de su tamaño original */
+  transition: transform 0.3s ease; /* Transición suave para el cambio de tamaño */
+}
+
+.navbar-brand {
+  color: var(--color-yellow);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  font-family: 'Monoton', sans-serif; /* Aplica la fuente Monoton */
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+.nav-link {
+  color: var(--color-light-bg) !important;
+  text-shadow: 1px 1px var(--color-dark-bg);
+}
+
+.nav-link:hover {
+  color: var(--color-pink) !important;
+  text-shadow: 1px 1px var(--color-yellow);
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+.badge-pill {
+  background-color: var(--color-yellow);
+  margin-left: 5px;
+}
+
+.nav-dropdown-item {
+  color: var(--color-light-bg);
+}
+
+.nav-dropdown-item:hover {
+  background-color: var(--color-light-bg);
+  color: var(--color-pink);
+}
+
+.nav-dropdown {
+  background-color: var(--color-dark-bg);
+}
+
+.navbar-toggler {
+  border-color: var(--color-light-bg);
+}
+
+.navbar-toggler-icon {
+  background-image: url('data:image/svg+xml; charset=utf8, %3Csvg xmlns%3D"http://www.w3.org/2000/svg" viewBox%3D"0 0 30 30"%3E%3Cpath stroke%3D"rgba%28255, 255, 255, 0.5%29" stroke-width%3D"2" linecap%3D"round" linejoin%3D"round" d%3D"M4 7h22M4 15h22M4 23h22"%3E%3C/path%3E%3C/svg%3E');
+}
+
+.navbar-toggler:hover,
+.navbar-toggler:focus {
+  background-color: var(--color-light-bg);
+}
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+}
