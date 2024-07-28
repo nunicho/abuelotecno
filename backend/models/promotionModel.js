@@ -26,6 +26,12 @@ const promotionSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   {
     timestamps: true,

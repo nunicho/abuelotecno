@@ -13,7 +13,7 @@
     import './utils/cronJobs.js'
 
     const port = process.env.PORT || 5000;
-
+    
     connectDB()
 
     const app = express();
