@@ -5,23 +5,15 @@ import Product from "../models/productModel.js";
 // @desc    Create a new promotion
 // @route   POST /api/promotions
 // @access  Private/Admin
-// @desc    Create a new promotion
-// @route   POST /api/promotions
-// @access  Private/Admin
 const createPromotion = asyncHandler(async (req, res) => {
   const {
-    name,
-    description,
-    discountPercentage,
-    startDate,
-    endDate,
+    name = "Nombre genérico",
+    description = "Descripción genérica",
+    discountPercentage = 20,
+    startDate = new Date(),
+    endDate = new Date(new Date().setDate(new Date().getDate() + 15)),
     products,
   } = req.body;
-
-  if (!name || discountPercentage === undefined || !startDate || !endDate) {
-    res.status(400);
-    throw new Error("Please fill all required fields");
-  }
 
   if (discountPercentage > 100 || discountPercentage < 0) {
     res.status(400);
@@ -58,6 +50,76 @@ const createPromotion = asyncHandler(async (req, res) => {
 const getPromotions = asyncHandler(async (req, res) => {
   const promotions = await Promotion.find({});
   res.json(promotions);
+});
+
+// @desc    Fetch a promotion by ID
+// @route   GET /api/promotions/:id
+// @access  Private/Admin
+const getPromotionById = asyncHandler(async (req, res) => {
+  const promotion = await Promotion.findById(req.params.id).populate('products');
+  if (promotion) {
+    return res.json(promotion);
+  } else {
+    res.status(404);
+    throw new Error("Promotion not found");
+  }
+});
+
+// @desc    Update promotion
+// @route   PUT /api/promotions/:id
+// @access  Private/Admin
+const updatePromotion = asyncHandler(async (req, res) => {
+  const { name, description, discountPercentage, startDate, endDate } = req.body;
+
+  // Validar el porcentaje de descuento
+  if (discountPercentage > 100 || discountPercentage < 0) {
+    res.status(400);
+    throw new Error("Discount percentage must be between 0 and 100");
+  }
+
+  const promotion = await Promotion.findById(req.params.id);
+
+  if (promotion) {
+    // Validar las fechas
+    const now = new Date();
+    if (startDate && new Date(startDate) < now) {
+      res.status(400);
+      throw new Error("Start date cannot be in the past");
+    }
+    if (endDate && new Date(endDate) < now) {
+      res.status(400);
+      throw new Error("End date cannot be in the past");
+    }
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      res.status(400);
+      throw new Error("Start date cannot be after end date");
+    }
+
+    // Actualizar los campos
+    promotion.name = name || promotion.name;
+    promotion.description = description || promotion.description;
+    promotion.discountPercentage =
+      discountPercentage !== undefined ? discountPercentage : promotion.discountPercentage;
+    promotion.startDate = startDate || promotion.startDate;
+    promotion.endDate = endDate || promotion.endDate;
+
+    const updatedPromotion = await promotion.save();
+
+    // Si la promoción está activa, actualizar los precios de descuento de los productos
+    if (promotion.active) {
+      const products = await Product.find({ _id: { $in: promotion.products } });
+      for (let product of products) {
+        product.discountPrice =
+          product.price * (1 - promotion.discountPercentage / 100);
+        await product.save();
+      }
+    }
+
+    res.json(updatedPromotion);
+  } else {
+    res.status(404);
+    throw new Error("Promotion not found");
+  }
 });
 
 // @desc    Add product to promotion
@@ -301,6 +363,8 @@ const deletePromotion = asyncHandler(async (req, res) => {
 export {
   createPromotion,
   getPromotions,
+  getPromotionById,
+  updatePromotion,
   addProductPromotion,
   removeProductPromotion,
   changeDiscountPromotion,
