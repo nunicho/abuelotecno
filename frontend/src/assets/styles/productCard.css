@@ -39,3 +39,64 @@
 .custom-card:hover .custom-card-img {
   border-bottom: 1px solid var(--color-pink);
 }
+
+/* productCard.css */
+
+/* Estilo para la tarjeta del producto */
+.custom-card {
+  position: relative;
+}
+
+/* Estilo para la cinta de promoción */
+.promo-badge {
+  position: absolute;
+  top: -2%;
+  right: -14%;
+  background-color: #28a745; /* Color verde */
+  color: white;
+  padding: 5px 5px;
+  border-radius: 15px; /* Esquinas redondeadas */
+  transform: rotate(45deg); /* Rotar la cinta */
+  transform-origin: 0 0; /* Ajustar el origen de la transformación */
+  z-index: 10;
+  width: 120px; /* Ajusta el ancho de la cinta */
+  height: 30px; /* Ajusta la altura de la cinta */
+}
+
+/* Contenedor para los precios */
+.price-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Asegura que el contenedor ocupe el ancho completo de la tarjeta */
+}
+
+/* Precio original tachado */
+.original-price {
+  text-decoration: line-through;
+  color: #888; /* Color gris para el precio original */
+  margin-bottom: 5px; /* Espacio entre el precio original y el precio con descuento */
+  display: block; /* Hace que el precio original ocupe su propio espacio */
+}
+
+/* Precio con descuento */
+.discount-price {
+  color: #fff; /* Color blanco para el texto del precio con descuento */
+  background-color: #28a745; /* Color verde para el fondo */
+  font-weight: bold;
+  font-size: 1.5rem; /* Ajusta el tamaño de la fuente si es necesario */
+  padding: 0.5rem 1rem; /* Espaciado para que el fondo sea visible alrededor del texto */
+  border-radius: 5px; /* Bordes redondeados si es deseado */
+  display: block; /* Asegura que el fondo cubra el ancho completo */
+  width: 100%; /* Hace que el fondo cubra el ancho completo del contenedor */
+  box-sizing: border-box; /* Incluye el padding en el ancho total del elemento */
+}
+
+/* Precio normal */
+.custom-price {
+  color: var(--color-yellow); /* Usa un color definido en tu archivo CSS */
+  font-size: 1.5rem; /* Ajusta el tamaño de la fuente según sea necesario */
+  font-weight: bold; /* Hacer el precio más prominente */
+  margin: 0; /* Eliminar márgenes innecesarios */
+  padding: 0.5rem 0; /* Espaciado vertical para mejor visualización */
+  display: block; /* Asegura que el precio se muestre como un bloque */
+}
