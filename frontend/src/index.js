@@ -36,6 +36,7 @@ import PasswordResetScreen from "./screens/PasswordResetScreen.jsx";
 import PasswordForgotScreen from "./screens/PasswordForgotScreen.jsx";
 import PromotionListScreen from "./screens/admin/PromotionListScreen.jsx";
 import PromotionEditScreen from "./screens/admin/PromotionEditScreen.jsx";
+import PromotionProductsScreen from "./screens/admin/PromotionProductsScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -73,7 +74,14 @@ const router = createBrowserRouter(
         <Route path="/admin/userlist" element={<UserListScreen />} />
         <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
         <Route path="/admin/promotions" element={<PromotionListScreen />} />
-        <Route path="/admin/promotions/:id/edit" element={<PromotionEditScreen />} />
+        <Route
+          path="/admin/promotions/:id/edit"
+          element={<PromotionEditScreen />}
+        />
+        <Route
+          path="/admin/promotions/:id/products"
+          element={<PromotionProductsScreen />}
+        />
       </Route>
     </Route>
   )

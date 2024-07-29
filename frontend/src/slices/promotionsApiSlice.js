@@ -45,7 +45,7 @@ export const promotionsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Promotions"],
     }),
     togglePromotion: builder.mutation({
-      query: (promotionId) => ({
+      query: ({promotionId}) => ({
         url: `${PROMOTIONS_URL}/${promotionId}/togglePromotion`,
         method: "PUT",
       }),

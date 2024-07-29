@@ -8,15 +8,17 @@ import { toast } from "react-toastify";
 import {
   useGetPromotionDetailQuery,
   useUpdatePromotionMutation,
+  useTogglePromotionMutation,
 } from "../../slices/promotionsApiSlice";
 
 const PromotionEditScreen = () => {
   const { id: promotionId } = useParams();
 
   const [name, setName] = useState("");
-  const [discountPercentage, setDiscountPercentage] = useState(0); // Changed from discount to discountPercentage
+  const [discountPercentage, setDiscountPercentage] = useState(0);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [active, setActive] = useState(false);
 
   const {
     data: promotion,
@@ -27,49 +29,53 @@ const PromotionEditScreen = () => {
 
   const [updatePromotion, { isLoading: loadingUpdate }] =
     useUpdatePromotionMutation();
+  const [togglePromotionStatus, { isLoading: loadingToggle }] =
+    useTogglePromotionMutation();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (promotion) {
       setName(promotion.name);
-      setDiscountPercentage(promotion.discountPercentage); // Changed from discount to discountPercentage
+      setDiscountPercentage(promotion.discountPercentage);
       setStartDate(promotion.startDate);
       setEndDate(promotion.endDate);
+      setActive(promotion.active);
     }
   }, [promotion]);
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleDiscountPercentageChange = (e) => {
-    // Changed from handleDiscountChange to handleDiscountPercentageChange
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleDiscountPercentageChange = (e) =>
     setDiscountPercentage(e.target.value);
-  };
-
-  const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
-  };
-
-  const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-  };
+  const handleStartDateChange = (e) => setStartDate(e.target.value);
+  const handleEndDateChange = (e) => setEndDate(e.target.value);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
     try {
       await updatePromotion({
         promotionId,
         name,
-        discountPercentage, // Changed from discount to discountPercentage
+        discountPercentage,
         startDate,
         endDate,
       }).unwrap();
       toast.success("Promoción actualizada");
       refetch();
       navigate("/admin/promotions");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  const toggleStatusHandler = async () => {
+    try {
+      await togglePromotionStatus({ promotionId, active: !active }).unwrap();
+      setActive(!active);
+      toast.success(
+        `Promoción ${!active ? "activada" : "desactivada"} exitosamente`
+      );
+      refetch();
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -83,7 +89,6 @@ const PromotionEditScreen = () => {
       <FormContainer>
         <h1>Editar promoción</h1>
         {loadingUpdate && <Loader />}
-
         {isLoading ? (
           <Loader />
         ) : error ? (
@@ -99,19 +104,15 @@ const PromotionEditScreen = () => {
                 onChange={handleNameChange}
               />
             </Form.Group>
-
             <Form.Group controlId="discountPercentage" className="my-2">
-              {" "}
-              {/* Changed from discount to discountPercentage */}
               <Form.Label>Descuento (%)</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Ingresar descuento"
-                value={discountPercentage} // Changed from discount to discountPercentage
-                onChange={handleDiscountPercentageChange} // Changed from handleDiscountChange to handleDiscountPercentageChange
+                value={discountPercentage}
+                onChange={handleDiscountPercentageChange}
               />
             </Form.Group>
-
             <Form.Group controlId="startDate" className="my-2">
               <Form.Label>Fecha de inicio</Form.Label>
               <Form.Control
@@ -121,7 +122,6 @@ const PromotionEditScreen = () => {
                 onChange={handleStartDateChange}
               />
             </Form.Group>
-
             <Form.Group controlId="endDate" className="my-2">
               <Form.Label>Fecha de finalización</Form.Label>
               <Form.Control
@@ -131,9 +131,27 @@ const PromotionEditScreen = () => {
                 onChange={handleEndDateChange}
               />
             </Form.Group>
-
             <Button type="submit" variant="primary" className="my-2">
               Actualizar
+            </Button>
+            <Button
+              type="button"
+              variant={active ? "danger" : "success"}
+              className="my-2"
+              onClick={toggleStatusHandler}
+              disabled={loadingToggle}
+            >
+              {active ? "Desactivar" : "Activar"}
+            </Button>
+            <Button
+              type="button"
+              variant="info"
+              className="my-2"
+              onClick={() =>
+                navigate(`/admin/promotions/${promotionId}/products`)
+              }
+            >
+              Productos
             </Button>
           </Form>
         )}

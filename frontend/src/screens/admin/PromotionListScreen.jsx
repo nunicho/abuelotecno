@@ -2,6 +2,7 @@ import React from "react";
 import {
   useGetPromotionsQuery,
   useCreatePromotionMutation,
+  useDeletePromotionMutation,
 } from "../../slices/promotionsApiSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
@@ -17,6 +18,7 @@ const PromotionListScreen = () => {
   } = useGetPromotionsQuery();
   const [createPromotion, { isLoading: loadingCreate }] =
     useCreatePromotionMutation();
+  const [deletePromotion] = useDeletePromotionMutation();
 
   const createPromotionHandler = async () => {
     if (window.confirm("¿Está seguro que quiere crear una nueva promoción?")) {
@@ -24,6 +26,18 @@ const PromotionListScreen = () => {
         await createPromotion();
         refetch();
         toast.success("Promoción creada exitosamente");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  const deleteHandler = async (id) => {
+    if (window.confirm("¿Está seguro que quiere eliminar esta promoción?")) {
+      try {
+        await deletePromotion(id).unwrap();
+        refetch();
+        toast.success("Promoción eliminada exitosamente");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -55,7 +69,8 @@ const PromotionListScreen = () => {
             <th>NOMBRE</th>
             <th>Start Date</th>
             <th>Expiration Date</th>
-            <th></th>
+            <th>ACTIVA</th>
+            <th>ACCIONES</th>
           </tr>
         </thead>
         <tbody>
@@ -65,12 +80,20 @@ const PromotionListScreen = () => {
               <td>{promotion.name}</td>
               <td>{new Date(promotion.startDate).toLocaleDateString()}</td>
               <td>{new Date(promotion.endDate).toLocaleDateString()}</td>
+              <td>{promotion.active ? "Sí" : "No"}</td>
               <td>
                 <LinkContainer to={`/admin/promotions/${promotion._id}/edit`}>
                   <Button variant="light" className="btn-sm mx-2">
-                    Edit
+                    Editar
                   </Button>
                 </LinkContainer>
+                <Button
+                  variant="danger"
+                  className="btn-sm mx-2"
+                  onClick={() => deleteHandler(promotion._id)}
+                >
+                  Eliminar
+                </Button>
               </td>
             </tr>
           ))}
