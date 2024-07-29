@@ -7,9 +7,20 @@ import "../assets/styles/productCard.css"; // Asegúrate de importar tu archivo 
 const Product = ({ product }) => {
   const formattedPrice = (price) => price.toFixed(2);
 
+  // Verifica si el producto está fuera de stock
+  const isOutOfStock = product.countInStock === 0;
+
   return (
-    <Card className="my-3 p-3 rounded custom-card">
-      {product.discountPrice && <div className="promo-badge">PROMO</div>}
+    <Card
+      className={`my-3 p-3 rounded custom-card ${
+        isOutOfStock ? "out-of-stock" : ""
+      }`}
+    >
+      {isOutOfStock ? (
+        <div className="stock-badge">SIN STOCK</div>
+      ) : (
+        product.discountPrice && <div className="promo-badge">PROMO</div>
+      )}
       <Link to={`/product/${product._id}`}>
         <Card.Img
           src={product.image}
@@ -35,10 +46,10 @@ const Product = ({ product }) => {
         <Card.Text
           as="div"
           className={`price-container ${
-            product.discountPrice ? "has-discount" : ""
+            product.discountPrice && !isOutOfStock ? "has-discount" : ""
           }`}
         >
-          {product.discountPrice ? (
+          {product.discountPrice && !isOutOfStock ? (
             <>
               <span className="original-price">
                 ${formattedPrice(product.price)}
@@ -48,9 +59,11 @@ const Product = ({ product }) => {
               </span>
             </>
           ) : (
-            <span className="custom-price">
-              ${formattedPrice(product.price)}
-            </span>
+            !isOutOfStock && (
+              <span className="custom-price">
+                ${formattedPrice(product.price)}
+              </span>
+            )
           )}
         </Card.Text>
       </Card.Body>
