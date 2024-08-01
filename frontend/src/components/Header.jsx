@@ -15,6 +15,7 @@ import SearchBox from "./SearchBox";
 import logo from "../assets/Images/logo.png";
 import { resetCart } from "../slices/cartSlice";
 import "../assets/styles/header.css";
+import PromotionBanner from "./PromotionBanner";
 
 
 const Header = () => {
@@ -40,6 +41,7 @@ const Header = () => {
 
   return (
     <header>
+      <PromotionBanner/>
       <Navbar className="header-navbar" expand="md" collapseOnSelect>
         <Container>
           <LinkContainer to="/">

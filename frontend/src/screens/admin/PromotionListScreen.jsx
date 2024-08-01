@@ -9,6 +9,12 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 
+const adjustForTimezone = (date) => {
+  const localDate = new Date(date);
+  localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+  return localDate.toLocaleDateString();
+};
+
 const PromotionListScreen = () => {
   const {
     data: promotions,
@@ -78,8 +84,8 @@ const PromotionListScreen = () => {
             <tr key={promotion._id}>
               <td>{promotion._id}</td>
               <td>{promotion.name}</td>
-              <td>{new Date(promotion.startDate).toLocaleDateString()}</td>
-              <td>{new Date(promotion.endDate).toLocaleDateString()}</td>
+              <td>{adjustForTimezone(promotion.startDate)}</td>
+              <td>{adjustForTimezone(promotion.endDate)}</td>
               <td>{promotion.active ? "Sí" : "No"}</td>
               <td>
                 <LinkContainer to={`/admin/promotions/${promotion._id}/edit`}>
@@ -104,7 +110,6 @@ const PromotionListScreen = () => {
 };
 
 export default PromotionListScreen;
-
 /*
 import React from "react";
 import { useGetPromotionsQuery } from "../../slices/promotionsApiSlice";

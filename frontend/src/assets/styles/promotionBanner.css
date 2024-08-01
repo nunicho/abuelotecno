@@ -1,0 +1,36 @@
+/* promotionBanner.css */
+
+.promotion-banner {
+  background-color: #f0e5de; /* Fondo color pastel */
+  color: #333; /* Color del texto */
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+  margin: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para un mejor efecto */
+}
+
+.promotion-banner h1 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+  color: #ff6f61; /* Color llamativo para el título */
+}
+
+.promotion-banner h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #333; /* Color del nombre de la promoción */
+}
+
+.timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.timer span {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #ff6f61; /* Color llamativo para el temporizador */
+  color: #fff;
+  border-radius: 5px;
+}

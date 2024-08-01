@@ -68,6 +68,7 @@ const getPromotionById = asyncHandler(async (req, res) => {
 // @desc    Update promotion
 // @route   PUT /api/promotions/:id
 // @access  Private/Admin
+//ANTERIOR
 const updatePromotion = asyncHandler(async (req, res) => {
   const { name, description, discountPercentage, startDate, endDate } = req.body;
 
@@ -80,13 +81,16 @@ const updatePromotion = asyncHandler(async (req, res) => {
   const promotion = await Promotion.findById(req.params.id);
 
   if (promotion) {
-    // Validar las fechas
+    // Validar las fechas 
     const now = new Date();
-    if (startDate && new Date(startDate) < now) {
+
+   
+
+    if (startDate && new Date(startDate) < now ) {
       res.status(400);
-      throw new Error("Start date cannot be in the past");
+      throw new Error("Start date must be from tomorrow or later");
     }
-    if (endDate && new Date(endDate) < now) {
+    if (endDate && new Date(endDate) < now ) {
       res.status(400);
       throw new Error("End date cannot be in the past");
     }
@@ -279,6 +283,14 @@ const togglePromotion = asyncHandler(async (req, res) => {
   const promotion = await Promotion.findById(req.params.id);
 
   if (promotion) {
+    const now = new Date();
+
+    // Verificar si la promoción intenta activarse antes de la fecha de inicio
+    if (!promotion.active && now < new Date(promotion.startDate)) {
+      res.status(400);
+      throw new Error("Cannot activate promotion before the start date");
+    }
+
     promotion.active = !promotion.active; // Toggle active state
     await promotion.save();
 

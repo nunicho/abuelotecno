@@ -58,8 +58,9 @@
 /* Estilo para el badge "SIN STOCK" */
 .stock-badge {
   position: absolute;
-  top: -2%; /* Ajusta este valor para posicionar la cinta desde 2/3 del borde superior */
-  right: -14%; /* Ajusta este valor para extender la cinta hacia la derecha */
+  clip-path: polygon(25% 0, 76% 0, 100% 90%, 0 101%);
+  top: -8%; /* Ajusta este valor para posicionar la cinta desde 2/3 del borde superior */
+  right: -24%; /* Ajusta este valor para extender la cinta hacia la derecha */
   background-color: #e74c3c; /* Color rojo anaranjado */
   color: white;
   padding: 5px 5px;
@@ -67,8 +68,8 @@
   transform: rotate(45deg); /* Rotar la cinta para que se cruce en diagonal */
   transform-origin: 0 0; /* Ajustar el origen de la transformación */
   z-index: 10;
-  width: 120px; /* Ajusta el ancho para que la cinta cubra el área deseada */
-  height: 30px; /* Ajusta la altura para que la cinta se vea adecuada */
+  width: 150px; /* Ajusta el ancho para que la cinta cubra el área deseada */
+  height: 40px; /* Ajusta la altura para que la cinta se vea adecuada */
   font-size: 0.9rem; /* Ajusta el tamaño de la fuente si es necesario */
 }
 
@@ -80,8 +81,9 @@
 /* Estilo para la cinta de promoción */
 .promo-badge {
   position: absolute;
-  top: -2%; /* Ajusta este valor para posicionar la cinta desde 2/3 del borde superior */
-  right: -14%; /* Ajusta este valor para extender la cinta hacia la derecha */
+  clip-path: polygon(26% 0, 76% 0, 100% 90%, 0 101%);
+  top: -7%; /* Ajusta este valor para posicionar la cinta desde 2/3 del borde superior */
+  right: -23%; /* Ajusta este valor para extender la cinta hacia la derecha */
   background-color: #28a745; /* Color verde */
   color: white;
   padding: 5px 5px;
@@ -89,8 +91,9 @@
   transform: rotate(45deg); /* Rotar la cinta para que se cruce en diagonal */
   transform-origin: 0 0; /* Ajustar el origen de la transformación */
   z-index: 10;
-  width: 120px; /* Ajusta el ancho para que la cinta cubra el área deseada */
-  height: 30px; /* Ajusta la altura para que la cinta se vea adecuada */
+  width: 150px; /* Ajusta el ancho para que la cinta cubra el área deseada */
+  height: 40px; /* Ajusta la altura para que la cinta se vea adecuada */
+  font-size: 0.9rem; /* Ajusta el tamaño de la fuente si es necesario */
 }
 
 /* Contenedor para los precios */
