@@ -20,6 +20,7 @@ export const promotionsApiSlice = apiSlice.injectEndpoints({
       query: (promotion) => ({
         url: PROMOTIONS_URL,
         method: "POST",
+        body: promotion,
       }),
       invalidatesTags: ["Promotions"],
     }),
@@ -27,13 +28,13 @@ export const promotionsApiSlice = apiSlice.injectEndpoints({
       query: ({
         promotionId,
         name,
+        description, // Incluye description aquí
         discountPercentage,
-        startDate,
-        endDate,
+        duration, // Incluye duration aquí
       }) => ({
         url: `${PROMOTIONS_URL}/${promotionId}`,
         method: "PUT",
-        body: { name, discountPercentage, startDate, endDate }, // Changed from promotion to { name, discountPercentage, startDate, endDate }
+        body: { name, description, discountPercentage, duration }, // Incluye description y duration
       }),
       invalidatesTags: ["Promotions"],
     }),
@@ -45,7 +46,7 @@ export const promotionsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Promotions"],
     }),
     togglePromotion: builder.mutation({
-      query: ({promotionId}) => ({
+      query: ({ promotionId }) => ({
         url: `${PROMOTIONS_URL}/${promotionId}/togglePromotion`,
         method: "PUT",
       }),

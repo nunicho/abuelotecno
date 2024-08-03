@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 
 const adjustForTimezone = (date) => {
+  if (!date) return "----";
   const localDate = new Date(date);
   localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
   return localDate.toLocaleDateString();
@@ -57,7 +58,7 @@ const PromotionListScreen = () => {
     <div>
       <Row className="align-items-center">
         <Col>
-          <h1>Promotions</h1>
+          <h1>Promociones</h1>
         </Col>
         <Col className="text-end">
           <Button className="btn-sm m-3" onClick={createPromotionHandler}>
@@ -71,10 +72,11 @@ const PromotionListScreen = () => {
       <Table striped bordered hover responsive className="table-sm">
         <thead>
           <tr>
-            <th>ID</th>
             <th>NOMBRE</th>
-            <th>Start Date</th>
-            <th>Expiration Date</th>
+            <th>DESCRIPCIÓN</th>
+            <th>DESCUENTO (%)</th>
+            <th>COMIENZA</th>
+            <th>FINALIZA</th>
             <th>ACTIVA</th>
             <th>ACCIONES</th>
           </tr>
@@ -82,8 +84,10 @@ const PromotionListScreen = () => {
         <tbody>
           {promotions.map((promotion) => (
             <tr key={promotion._id}>
-              <td>{promotion._id}</td>
-              <td>{promotion.name}</td>
+              <td>{promotion.name}</td> {/* Nombre primero */}
+              <td>{promotion.description || "Sin descripción"}</td>{" "}
+              {/* Descripción después */}
+              <td>{promotion.discountPercentage}</td>
               <td>{adjustForTimezone(promotion.startDate)}</td>
               <td>{adjustForTimezone(promotion.endDate)}</td>
               <td>{promotion.active ? "Sí" : "No"}</td>

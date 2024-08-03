@@ -15,10 +15,9 @@ const PromotionEditScreen = () => {
   const { id: promotionId } = useParams();
 
   const [name, setName] = useState("");
+  const [description, setDescription] = useState(""); // Estado para descripción
   const [discountPercentage, setDiscountPercentage] = useState(0);
-  const [startDate, setStartDate] = useState(""); // Start Date is set but not editable
-  const [endDate, setEndDate] = useState("");
-  const [duration, setDuration] = useState(7); // Nuevo estado para duration
+  const [duration, setDuration] = useState(7); // Estado para duración
   const [active, setActive] = useState(false);
 
   const {
@@ -38,19 +37,18 @@ const PromotionEditScreen = () => {
   useEffect(() => {
     if (promotion) {
       setName(promotion.name);
+      setDescription(promotion.description || ""); // Configura descripción si existe
       setDiscountPercentage(promotion.discountPercentage);
-      setStartDate(promotion.startDate);
-      setEndDate(promotion.endDate);
       setDuration(promotion.duration || 7); // Configura duración si existe
       setActive(promotion.active);
     }
   }, [promotion]);
 
   const handleNameChange = (e) => setName(e.target.value);
+  const handleDescriptionChange = (e) => setDescription(e.target.value); // Manejador para descripción
   const handleDiscountPercentageChange = (e) =>
     setDiscountPercentage(e.target.value);
-  const handleEndDateChange = (e) => setEndDate(e.target.value);
-  const handleDurationChange = (e) => setDuration(e.target.value); // Manejador para duration
+  const handleDurationChange = (e) => setDuration(Number(e.target.value)); // Manejador para duración
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -58,9 +56,8 @@ const PromotionEditScreen = () => {
       await updatePromotion({
         promotionId,
         name,
+        description, // Agregamos description aquí
         discountPercentage,
-        // startDate no se envía en la actualización
-        endDate,
         duration, // Agregamos duration aquí
       }).unwrap();
       toast.success("Promoción actualizada");
@@ -107,6 +104,15 @@ const PromotionEditScreen = () => {
                 onChange={handleNameChange}
               />
             </Form.Group>
+            <Form.Group controlId="description" className="my-2">
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar descripción"
+                value={description}
+                onChange={handleDescriptionChange}
+              />
+            </Form.Group>
             <Form.Group controlId="discountPercentage" className="my-2">
               <Form.Label>Descuento (%)</Form.Label>
               <Form.Control
@@ -114,19 +120,6 @@ const PromotionEditScreen = () => {
                 placeholder="Ingresar descuento"
                 value={discountPercentage}
                 onChange={handleDiscountPercentageChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="startDate" className="my-2">
-              <Form.Label>Fecha de inicio</Form.Label>
-              <Form.Control type="text" value={startDate} readOnly />
-            </Form.Group>
-            <Form.Group controlId="endDate" className="my-2">
-              <Form.Label>Fecha de finalización</Form.Label>
-              <Form.Control
-                type="date"
-                placeholder="Ingresar fecha de finalización"
-                value={endDate}
-                onChange={handleEndDateChange}
               />
             </Form.Group>
             <Form.Group controlId="duration" className="my-2">
