@@ -1,125 +1,114 @@
 import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import {useParams} from "react-router-dom"
-import Message from "../../components/Message";
-import Loader from "../../components/Loader";
-import Paginate from "../../components/Paginate";
-import { toast } from "react-toastify";
 import {
-  useGetProductsQuery,
-  useCreateProductMutation,
-  useDeleteProductMutation,
-} from "../../slices/productsApiSlice";
+  useGetPromotionsQuery,
+  useCreatePromotionMutation,
+  useDeletePromotionMutation,
+} from "../../slices/promotionsApiSlice";
+import { LinkContainer } from "react-router-bootstrap";
+import { Table, Button, Row, Col } from "react-bootstrap";
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
-const ProductListScreen = () => {
-  const {pageNumber} = useParams()
+const adjustForTimezone = (date) => {
+  const localDate = new Date(date);
+  // Convertir a la zona horaria local
+  const localOffset = localDate.getTimezoneOffset();
+  localDate.setMinutes(localDate.getMinutes() - localOffset);
+  return localDate.toLocaleDateString();
+};
 
+const PromotionListScreen = () => {
+  const {
+    data: promotions,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetPromotionsQuery();
+  const [createPromotion, { isLoading: loadingCreate }] =
+    useCreatePromotionMutation();
+  const [deletePromotion] = useDeletePromotionMutation();
 
-
-  const { data, isLoading, error, refetch } = useGetProductsQuery({pageNumber});
-
-  const [createProduct, { isLoading: loadingCreate }] =
-    useCreateProductMutation();
-
-  const [deleteProduct, {isLoading: loadingDelete}] = useDeleteProductMutation()
-
-  const deleteHandler = async (id) => {
-    if(window.confirm('Está seguro?')){
+  const createPromotionHandler = async () => {
+    if (window.confirm("¿Está seguro que quiere crear una nueva promoción?")) {
       try {
-        await deleteProduct(id);
-        toast.success('Producto borrado')
-        refetch();        
-      } catch (err) {
-        toast.error(err?.data?.message || err.error)
-      }
-    }
-  };
-
-
-  // IDEA PARA AGREGAR, MOSTRAR STOCK EN LA SCREEN
-  const createProductHandler = async () => {
-    if (window.confirm("¿Está seguro que quiere crear un nuevo producto?")) {
-      // Probar usar sweet alert
-      try {
-        await createProduct();
+        await createPromotion();
         refetch();
+        toast.success("Promoción creada exitosamente");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
     }
   };
 
+  const deleteHandler = async (id) => {
+    if (window.confirm("¿Está seguro que quiere eliminar esta promoción?")) {
+      try {
+        await deletePromotion(id).unwrap();
+        refetch();
+        toast.success("Promoción eliminada exitosamente");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  if (isLoading) return <Loader />;
+  if (isError) return <div>Error loading promotions</div>;
+
   return (
-    <>
+    <div>
       <Row className="align-items-center">
         <Col>
-          <h1>Products</h1>
+          <h1>Promociones</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3" onClick={createProductHandler}>
-            <FaEdit /> Crear producto
+          <Button className="btn-sm m-3" onClick={createPromotionHandler}>
+            Crear promoción
           </Button>
         </Col>
       </Row>
 
       {loadingCreate && <Loader />}
-      {loadingDelete && <Loader />}
 
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error.data.message}</Message>
-      ) : (
-        <>
-          <Table striped hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NOMBRE</th>
-                <th>PRECIO</th>
-                <th>CATEGORIA</th>
-                <th>MARCA</th>
-                {/* <th>STOCK</th> */}
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>{product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.brand}</td>
-                  {/* <td>{product.countInStock}</td> */}
-                  <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="light" className="btn-sm mx-2">
-                        <FaEdit />
-                      </Button>
-                    </LinkContainer>
-                    <Button
-                      variant="danger"
-                      className="btn-sm"
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <FaTrash style={{ color: "white" }} />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
-        </>
-      )}
-    </>
+      <Table striped bordered hover responsive className="table-sm">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Expiración</th>
+            <th>ACTIVA</th>
+            <th>ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody>
+          {promotions.map((promotion) => (
+            <tr key={promotion._id}>
+              <td>{promotion._id}</td>
+              <td>{promotion.name}</td>
+              <td>{adjustForTimezone(promotion.startDate)}</td>
+              <td>{adjustForTimezone(promotion.endDate)}</td>
+              <td>{promotion.active ? "Sí" : "No"}</td>
+              <td>
+                <LinkContainer to={`/admin/promotions/${promotion._id}/edit`}>
+                  <Button variant="light" className="btn-sm mx-2">
+                    Editar
+                  </Button>
+                </LinkContainer>
+                <Button
+                  variant="danger"
+                  className="btn-sm mx-2"
+                  onClick={() => deleteHandler(promotion._id)}
+                >
+                  Eliminar
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
   );
 };
 
-export default ProductListScreen;
+export default PromotionListScreen;

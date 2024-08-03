@@ -7,8 +7,6 @@ import {
   updatePromotion,
   addProductPromotion,
   removeProductPromotion,
-  changeDiscountPromotion,
-  changeDatePromotion,
   togglePromotion,
   deletePromotion,
 } from "../controllers/promotionController.js";
@@ -37,13 +35,5 @@ router
 router
   .route("/:id/removeProduct")
   .put(protect, admin, checkObjectId, removeProductPromotion); // Eliminar producto de promoción
-
-router
-  .route("/:id/changeDiscount")
-  .put(protect, admin, checkObjectId, changeDiscountPromotion); // Cambiar porcentaje de descuento de promoción
-
-router
-  .route("/:id/changeDate")
-  .put(protect, admin, checkObjectId, changeDatePromotion); // Cambiar fechas de promoción
 
 export default router;

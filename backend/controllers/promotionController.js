@@ -10,23 +10,33 @@ const createPromotion = asyncHandler(async (req, res) => {
     name = "Nombre genérico",
     description = "Descripción genérica",
     discountPercentage = 20,
-    startDate = new Date(),
-    endDate = new Date(new Date().setDate(new Date().getDate() + 15)),
+    startDate, // Puede ser nulo
+    duration = 7, // Duración predeterminada en días
     products,
   } = req.body;
 
+  // Validar el porcentaje de descuento
   if (discountPercentage > 100 || discountPercentage < 0) {
     res.status(400);
     throw new Error("Discount percentage must be between 0 and 100");
   }
 
+  // Calcular la fecha de finalización basada en la fecha de inicio y la duración, si existe `startDate`
+  let endDate = null;
+  if (startDate) {
+    endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + duration);
+  }
+
+  // Crear la promoción
   const promotion = new Promotion({
     name,
     description,
     discountPercentage,
-    startDate,
-    endDate,
-    active: false, // New promotions are inactive by default
+    startDate: startDate || null,
+    duration,
+    endDate: endDate || null, // Puede ser nulo si no hay startDate
+    active: false, // Las promociones nuevas están inactivas por defecto
     products: products || [], // Lista de productos asociados
   });
 
@@ -70,7 +80,7 @@ const getPromotionById = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 //ANTERIOR
 const updatePromotion = asyncHandler(async (req, res) => {
-  const { name, description, discountPercentage, startDate, endDate } = req.body;
+  const { name, description, discountPercentage, duration } = req.body;
 
   // Validar el porcentaje de descuento
   if (discountPercentage > 100 || discountPercentage < 0) {
@@ -81,31 +91,29 @@ const updatePromotion = asyncHandler(async (req, res) => {
   const promotion = await Promotion.findById(req.params.id);
 
   if (promotion) {
-    // Validar las fechas 
-    const now = new Date();
-
-   
-
-    if (startDate && new Date(startDate) < now ) {
-      res.status(400);
-      throw new Error("Start date must be from tomorrow or later");
-    }
-    if (endDate && new Date(endDate) < now ) {
-      res.status(400);
-      throw new Error("End date cannot be in the past");
-    }
-    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      res.status(400);
-      throw new Error("Start date cannot be after end date");
-    }
-
-    // Actualizar los campos
+    // Actualizar los campos permitidos
     promotion.name = name || promotion.name;
     promotion.description = description || promotion.description;
     promotion.discountPercentage =
-      discountPercentage !== undefined ? discountPercentage : promotion.discountPercentage;
-    promotion.startDate = startDate || promotion.startDate;
-    promotion.endDate = endDate || promotion.endDate;
+      discountPercentage !== undefined
+        ? discountPercentage
+        : promotion.discountPercentage;
+
+    // Actualizar duración y endDate solo si active es true
+    if (duration !== undefined && promotion.active) {
+      if (duration < 0) {
+        res.status(400);
+        throw new Error("Duration must be a positive number");
+      }
+
+      // Actualizar duración
+      promotion.duration = duration;
+
+      // Recalcular endDate basado en la nueva duración
+      promotion.endDate = new Date(
+        promotion.startDate.getTime() + duration * 24 * 60 * 60 * 1000
+      );
+    }
 
     const updatedPromotion = await promotion.save();
 
@@ -204,78 +212,6 @@ const removeProductPromotion = asyncHandler(async (req, res) => {
   }
 });
 
-const changeDiscountPromotion = asyncHandler(async (req, res) => {
-  const { discountPercentage } = req.body;
-
-  if (discountPercentage > 100 || discountPercentage < 0) {
-    res.status(400);
-    throw new Error("Discount percentage must be between 0 and 100");
-  }
-
-  const promotion = await Promotion.findById(req.params.id);
-
-  if (promotion) {
-    promotion.discountPercentage =
-      discountPercentage !== undefined
-        ? discountPercentage
-        : promotion.discountPercentage;
-    await promotion.save();
-
-    if (promotion.active) {
-      const products = await Product.find({ _id: { $in: promotion.products } });
-      for (let product of products) {
-        product.discountPrice =
-          product.price * (1 - promotion.discountPercentage / 100);
-        await product.save();
-      }
-    }
-
-    res.json({ message: "Promotion discount updated" });
-  } else {
-    res.status(404);
-    throw new Error("Promotion not found");
-  }
-});
-
-
-// @desc    Change start and end date for promotion
-// @route   PUT /api/promotions/:id/changeDate
-// @access  Private/Admin
-const changeDatePromotion = asyncHandler(async (req, res) => {
-  const { startDate, endDate } = req.body;
-
-  const promotion = await Promotion.findById(req.params.id);
-
-  if (promotion) {
-    const now = new Date();
-
-    if (startDate && new Date(startDate) < now) {
-      res.status(400);
-      throw new Error("Start date cannot be in the past");
-    }
-
-    if (endDate && new Date(endDate) < now) {
-      res.status(400);
-      throw new Error("End date cannot be in the past");
-    }
-
-    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      res.status(400);
-      throw new Error("Start date cannot be after end date");
-    }
-
-    promotion.startDate = startDate || promotion.startDate;
-    promotion.endDate = endDate || promotion.endDate;
-    await promotion.save();
-
-    res.json({ message: "Promotion dates updated" });
-  } else {
-    res.status(404);
-    throw new Error("Promotion not found");
-  }
-});
-
-
 // @desc    Activate/Deactivate promotion
 // @route   PUT /api/promotions/:id/togglePromotion
 // @access  Private/Admin
@@ -283,21 +219,33 @@ const togglePromotion = asyncHandler(async (req, res) => {
   const promotion = await Promotion.findById(req.params.id);
 
   if (promotion) {
-    const now = new Date();
-
-    // Verificar si la promoción intenta activarse antes de la fecha de inicio
-    if (!promotion.active && now < new Date(promotion.startDate)) {
-      res.status(400);
-      throw new Error("Cannot activate promotion before the start date");
-    }
-
-    promotion.active = !promotion.active; // Toggle active state
-    await promotion.save();
-
-    const products = await Product.find({ _id: { $in: promotion.products } });
-
+    // Verificar el estado actual de la promoción
     if (promotion.active) {
-      // Apply discount to products
+      // Desactivar la promoción
+      promotion.active = false;
+      promotion.startDate = null;
+      promotion.endDate = null;
+
+      // Restablecer los precios de descuento de los productos
+      const products = await Product.find({ _id: { $in: promotion.products } });
+      for (let product of products) {
+        product.discountPrice = null;
+        product.promotions = product.promotions.filter(
+          (promoId) => promoId.toString() !== promotion._id.toString()
+        );
+        await product.save();
+      }
+    } else {
+      // Activar la promoción
+      const now = new Date();
+      promotion.active = true;
+      promotion.startDate = now;
+      promotion.endDate = new Date(
+        now.getTime() + promotion.duration * 24 * 60 * 60 * 1000
+      );
+
+      // Aplicar los precios de descuento a los productos
+      const products = await Product.find({ _id: { $in: promotion.products } });
       for (let product of products) {
         product.discountPrice =
           product.price * (1 - promotion.discountPercentage / 100);
@@ -306,17 +254,9 @@ const togglePromotion = asyncHandler(async (req, res) => {
         }
         await product.save();
       }
-    } else {
-      // Remove discount from products
-      for (let product of products) {
-        product.discountPrice = null;
-        product.promotions = product.promotions.filter(
-          (promoId) => promoId.toString() !== promotion._id.toString()
-        );
-        await product.save();
-      }
     }
 
+    await promotion.save();
     res.json({ message: "Promotion state toggled", promotion });
   } else {
     res.status(404);
@@ -379,8 +319,6 @@ export {
   updatePromotion,
   addProductPromotion,
   removeProductPromotion,
-  changeDiscountPromotion,
-  changeDatePromotion,
   togglePromotion,
   deletePromotion,
 };

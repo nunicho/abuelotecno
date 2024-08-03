@@ -20,10 +20,14 @@ const promotionSchema = mongoose.Schema(
     },
     startDate: {
       type: Date,
-      required: true,
+      default: null,
     },
     endDate: {
       type: Date,
+      default: null,
+    },
+    duration: {
+      type: Number, // Duration in days
       required: true,
     },
     products: [

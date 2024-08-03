@@ -16,8 +16,9 @@ const PromotionEditScreen = () => {
 
   const [name, setName] = useState("");
   const [discountPercentage, setDiscountPercentage] = useState(0);
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(""); // Start Date is set but not editable
   const [endDate, setEndDate] = useState("");
+  const [duration, setDuration] = useState(7); // Nuevo estado para duration
   const [active, setActive] = useState(false);
 
   const {
@@ -40,6 +41,7 @@ const PromotionEditScreen = () => {
       setDiscountPercentage(promotion.discountPercentage);
       setStartDate(promotion.startDate);
       setEndDate(promotion.endDate);
+      setDuration(promotion.duration || 7); // Configura duración si existe
       setActive(promotion.active);
     }
   }, [promotion]);
@@ -47,8 +49,8 @@ const PromotionEditScreen = () => {
   const handleNameChange = (e) => setName(e.target.value);
   const handleDiscountPercentageChange = (e) =>
     setDiscountPercentage(e.target.value);
-  const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleEndDateChange = (e) => setEndDate(e.target.value);
+  const handleDurationChange = (e) => setDuration(e.target.value); // Manejador para duration
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -57,8 +59,9 @@ const PromotionEditScreen = () => {
         promotionId,
         name,
         discountPercentage,
-        startDate,
+        // startDate no se envía en la actualización
         endDate,
+        duration, // Agregamos duration aquí
       }).unwrap();
       toast.success("Promoción actualizada");
       refetch();
@@ -115,12 +118,7 @@ const PromotionEditScreen = () => {
             </Form.Group>
             <Form.Group controlId="startDate" className="my-2">
               <Form.Label>Fecha de inicio</Form.Label>
-              <Form.Control
-                type="date"
-                placeholder="Ingresar fecha de inicio"
-                value={startDate}
-                onChange={handleStartDateChange}
-              />
+              <Form.Control type="text" value={startDate} readOnly />
             </Form.Group>
             <Form.Group controlId="endDate" className="my-2">
               <Form.Label>Fecha de finalización</Form.Label>
@@ -129,6 +127,15 @@ const PromotionEditScreen = () => {
                 placeholder="Ingresar fecha de finalización"
                 value={endDate}
                 onChange={handleEndDateChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="duration" className="my-2">
+              <Form.Label>Duración (días)</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Ingresar duración en días"
+                value={duration}
+                onChange={handleDurationChange}
               />
             </Form.Group>
             <Button type="submit" variant="primary" className="my-2">
