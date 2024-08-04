@@ -1,36 +1,106 @@
-/* promotionBanner.css */
-
 .promotion-banner {
-  background-color: #f0e5de; /* Fondo color pastel */
-  color: #333; /* Color del texto */
-  padding: 10px 20px;
+  background-color: #4a90e2; /* Fondo azul */
+  color: white;
+  padding: 10px 20px; /* Reducido para un aspecto más compacto */
   border-radius: 5px;
-  text-align: center;
-  margin: 10px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para un mejor efecto */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* Necesario para posicionar el botón de cierre */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.promotion-banner h1 {
-  font-size: 1.5rem;
-  margin-bottom: 5px;
-  color: #ff6f61; /* Color llamativo para el título */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Tamaño de fuente más grande para la X */
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
-.promotion-banner h2 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #333; /* Color del nombre de la promoción */
+.close-button:hover {
+  color: #d0d0d0; /* Color de la X al pasar el ratón */
+}
+
+.promotions-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.promotion-item {
+  margin-bottom: 15px; /* Reducir el margen inferior */
+}
+
+.promotion-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px; /* Reducido para menos espacio entre elementos */
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.promotion-name {
+  font-size: 1.2rem; /* Tamaño de fuente más pequeño */
+  font-weight: bold;
+  margin-right: 10px;
 }
 
 .timer {
-  font-size: 1.2rem;
+  display: flex;
+  gap: 5px;
+  font-size: 1rem; /* Tamaño de fuente más pequeño */
   font-weight: bold;
 }
 
 .timer span {
-  margin: 0 5px;
-  padding: 5px 10px;
-  background-color: #ff6f61; /* Color llamativo para el temporizador */
-  color: #fff;
-  border-radius: 5px;
+  margin-right: 3px; /* Reducido para menos espacio */
 }
+
+.promotion-description {
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  margin-top: 5px;
+}
+
+button {
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  padding: 8px 15px; /* Reducido para un aspecto más compacto */
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #3a7ab8;
+}
+
+@media (max-width: 768px) {
+  .promotion-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .promotion-name {
+    font-size: 1rem; /* Tamaño de fuente más pequeño para pantallas pequeñas */
+    margin-bottom: 5px;
+  }
+
+  .timer {
+    font-size: 0.7rem; /* Tamaño de fuente más pequeño para pantallas pequeñas */
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 6px 12px; /* Más compacto en pantallas pequeñas */
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+  }
+}
+
