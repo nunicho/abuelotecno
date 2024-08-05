@@ -40,6 +40,7 @@ const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Nombre genérico",
     price: 0,
+    discountPrice: null, // Agregar campo discountPrice
     user: req.user._id,
     image: "/images/sample.jpg",
     brand: "Marca genérica",
@@ -57,18 +58,19 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route    PUT /api/products/:id
 // @access   Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
-    req.body;
+  const { name, price, description, image, brand, category, countInStock, discountPrice } = req.body;
 
   const product = await Product.findById(req.params.id);
+
   if (product) {
     product.name = name;
-    product.price = price;
+    product.price = parseFloat(price).toFixed(2); // Asegurarse de que el precio tenga dos decimales
     product.description = description;
     product.image = image;
     product.brand = brand;
     product.category = category;
     product.countInStock = countInStock;
+    product.discountPrice = discountPrice ? parseFloat(discountPrice).toFixed(2) : null; // Actualizar discountPrice con dos decimales o null
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

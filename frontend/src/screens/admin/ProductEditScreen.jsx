@@ -56,7 +56,7 @@ const ProductEditScreen = () => {
   useEffect(() => {
     if (product) {
       setName(product.name);
-      setPrice(product.price);
+      setPrice(product.price.toFixed(2)); // Establecer con dos decimales
       setImage(product.image);
       setBrand(product.brand);
       setCategory(product.category);
@@ -115,8 +115,6 @@ const ProductEditScreen = () => {
   };
 
   const submitHandler = async (e) => {
-    const formattedPrice = parseFloat(price).toFixed(2);
-
     e.preventDefault();
 
     const nameError = validateName(name);
@@ -150,7 +148,7 @@ const ProductEditScreen = () => {
       await updateProduct({
         productId,
         name,
-        price: formattedPrice,
+        price: parseFloat(price).toFixed(2), // Asegurarse de enviar con dos decimales
         image,
         brand,
         category,

@@ -134,8 +134,12 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    // check the correct amount was paid
-    const paidCorrectAmount = order.totalPrice.toString() === value;
+    // Check the correct amount was paid
+    // Ensure both values have two decimals for comparison
+    const orderTotalPrice = order.totalPrice.toFixed(2);
+    const paymentAmount = Number(value).toFixed(2);
+
+    const paidCorrectAmount = orderTotalPrice === paymentAmount;
     if (!paidCorrectAmount) throw new Error("Monto a pagar incorrecto");
 
     order.isPaid = true;

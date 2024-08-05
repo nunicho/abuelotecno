@@ -105,6 +105,11 @@ const OrderScreen = () => {
     }
   };
 
+  // Calcular la sumatoria de los precios de los items
+  const itemsPrice = order
+    ? order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    : 0;
+
   return isLoading ? (
     <Loader />
   ) : error ? (
@@ -180,7 +185,7 @@ const OrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${order.itemsPrice}</Col>
+                  <Col>${itemsPrice.toFixed(2)}</Col>
                 </Row>
                 <Row>
                   <Col>Envío</Col>
@@ -245,9 +250,8 @@ const OrderScreen = () => {
 };
 
 export default OrderScreen;
-
 /*
-  import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -494,5 +498,6 @@ const OrderScreen = () => {
 };
 
 export default OrderScreen;
+
 
   */
