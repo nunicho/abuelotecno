@@ -15,8 +15,9 @@ import checkObjectId from "../middleware/checkObjectId.js";
 
 router
   .route("/")
-  .post(protect, admin, createPromotion) // Crear promoción
-  .get(protect, admin, getPromotions); // Obtener todas las promociones
+  .get(getPromotions) // Obtener todas las promociones
+  .post(protect, admin, createPromotion); // Crear promoción
+
 
 router
   .route("/:id")
