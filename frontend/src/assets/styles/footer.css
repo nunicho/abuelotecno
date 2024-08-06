@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+
+/* Estilo general del footer */
+.footerClass {
+  background-color: rgba(156, 39, 176, 0.7); /* Púrpura semi-transparente */
+  color: var(--color-yellow); /* Texto amarillo */
+  padding: 1rem 0; /* Ajuste de padding para reducir la altura */
+  font-family: Arial, sans-serif; /* Fuente predeterminada */
+  text-align: left; /* Alinear el contenido a la izquierda */
+}
+
+/* Ajustes para otros elementos dentro del footer */
+.footerClass h5 {
+  text-align: left; /* Alinear los títulos a la izquierda */
+}
+
+.footerClass p,
+.footerClass ul {
+  text-align: left; /* Alinear párrafos y listas a la izquierda */
+}
+
+.footerClass a {
+  text-align: left; /* Alinear los enlaces a la izquierda */
+}
+
+/* Resto de los estilos */
+.footer-logo {
+  width: 100px; /* Tamaño del logo */
+  margin-bottom: 1rem; /* Espacio debajo del logo */
+}
+
+.footer-links {
+  list-style: none; /* Elimina los puntos de la lista */
+  padding: 0; /* Elimina el padding por defecto */
+  margin: 1rem 0; /* Margen para separar la lista */
+}
+
+.footer-links li {
+  margin: 0.5rem 0; /* Espacio entre los enlaces para mejor visualización */
+}
+
+.footer-links a {
+  color: var(--color-light-bg); /* Color claro para los enlaces */
+  text-decoration: none; /* Elimina el subrayado */
+  transition: color 0.3s ease; /* Transición suave para el hover */
+}
+
+.footer-links a:hover {
+  color: var(--color-pink); /* Color rosa en hover */
+  text-shadow: 1px 1px var(--color-yellow); /* Sombra de texto amarilla en hover */
+}
+
+.footer-socials {
+  margin: 1rem 0; /* Margen para separar las redes sociales */
+}
+
+.footer-socials a {
+  color: var(--color-light-bg); /* Color claro para los íconos */
+  margin: 0 0.5rem; /* Espacio entre los íconos */
+  font-size: 1.5rem; /* Tamaño de los íconos */
+  transition: color 0.3s ease; /* Transición suave para el hover */
+}
+
+.footer-socials a:hover {
+  color: var(--color-pink); /* Color rosa en hover */
+}
+
+.footer-newsletter {
+  margin: 2rem 0; /* Margen para separar la sección del newsletter */
+}
+
+.footer-newsletter input[type="email"] {
+  padding: 0.5rem; /* Espaciado interno */
+  border: none; /* Elimina el borde por defecto */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-right: 0.5rem; /* Espacio a la derecha del input */
+  width: calc(100% - 130px); /* Ancho del input menos el ancho del botón */
+  max-width: 400px; /* Ancho máximo para el input */
+}
+
+.footer-newsletter button {
+  padding: 0.5rem 1rem; /* Espaciado interno */
+  background-color: var(--color-pink); /* Fondo rosa */
+  color: var(--color-dark-bg); /* Texto oscuro */
+  border: none; /* Elimina el borde por defecto */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background-color 0.3s ease; /* Transición suave para el hover */
+}
+
+.footer-newsletter button:hover {
+  background-color: var(--color-blue); /* Fondo azul en hover */
+}
+
+.footer-copy {
+  margin-top: 2rem; /* Margen superior */
+  font-size: 0.8rem; /* Tamaño de fuente pequeño */
+  color: var(--color-light-bg); /* Color claro */
+}

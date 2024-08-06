@@ -1,23 +1,22 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import Carousel from  'react-bootstrap/Carousel'
+import React from "react";
+import { Link } from "react-router-dom";
+import Carousel from "react-bootstrap/Carousel";
 import Image from "react-bootstrap/Image";
-import Loader from './Loader'
-import Message from './Message'
-import { useGetTopProductsQuery } from '../slices/productsApiSlice'
+import Loader from "./Loader";
+import Message from "./Message";
+import { useGetTopProductsQuery } from "../slices/productsApiSlice";
 import "../assets/styles/productCarousel.css";
-
 
 const randomImages = [
   "../abuelo/1.png",
-   "../abuelo/2.png",
-   "../abuelo/3.png",
-   "../abuelo/4.png",
-   "../abuelo/5.png",
-   "../abuelo/6.png",
-   "../abuelo/7.png",
-   "../abuelo/8.png",
-   "../abuelo/9.png",
+  "../abuelo/2.png",
+  "../abuelo/3.png",
+  "../abuelo/4.png",
+  "../abuelo/5.png",
+  "../abuelo/6.png",
+  "../abuelo/7.png",
+  "../abuelo/8.png",
+  "../abuelo/9.png",
   "../abuelo/10.png",
   "../abuelo/11.png",
   "../abuelo/12.png",
@@ -29,17 +28,26 @@ const getRandomImage = () => {
   return randomImages[randomIndex];
 };
 
-
 const ProductCarousel = () => {
   const { data: products, isLoading, error } = useGetTopProductsQuery();
 
-  return isLoading ? (
-    <Loader />
-  ) : error ? (
-    <Message variant="danger">{error}</Message>
-  ) : (
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <Message variant="danger">{error}</Message>;
+  }
+
+  // Ordenar los productos por rating de mayor a menor y seleccionar los tres primeros
+  const topRatedProducts = products
+    .slice()
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 3);
+
+  return (
     <Carousel pause="hover" className="bg-primary mb-4">
-      {products.map((product) => (
+      {topRatedProducts.map((product) => (
         <Carousel.Item key={product._id}>
           <Link to={`/product/${product._id}`}>
             <div className="carousel-images-container">
@@ -57,9 +65,7 @@ const ProductCarousel = () => {
               />
             </div>
             <Carousel.Caption className="carousel-caption">
-              <h2>
-                {product.name} (${product.price})
-              </h2>
+              <h2>{product.name}</h2>
             </Carousel.Caption>
           </Link>
         </Carousel.Item>
