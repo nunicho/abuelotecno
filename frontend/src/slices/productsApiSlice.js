@@ -72,6 +72,12 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         body: { stock },
       }),
     }),
+    getCategories: builder.query({
+      query: () => ({
+        url: `${PRODUCTS_URL}/categories`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -84,5 +90,6 @@ export const {
   useDeleteProductMutation,
   useCreateReviewMutation,
   useGetTopProductsQuery,
-  useUpdateProductStockMutation
+  useUpdateProductStockMutation,
+  useGetCategoriesQuery,
 } = productsApiSlice; // es una convención, exportarla con use//nombre//Query-Mutation
