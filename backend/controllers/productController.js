@@ -7,16 +7,31 @@ import Product from "../models/productModel.js";
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 8;
   const page = Number(req.query.pageNumber) || 1;
-  
+
+  // Filtro por palabra clave
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: "i" } }
     : {};
 
-  const count = await Product.countDocuments({...keyword});
+  // Filtro por categoría
+  const category = req.query.category
+    ? { category: req.query.category }
+    : {};
 
-    const products = await Product.find({...keyword})
+  // Contar documentos que coincidan con los filtros
+  const count = await Product.countDocuments({
+    ...keyword,
+    ...category,
+  });
+
+  // Encontrar productos con los filtros aplicados
+  const products = await Product.find({
+    ...keyword,
+    ...category,
+  })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
+
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
