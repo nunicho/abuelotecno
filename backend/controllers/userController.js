@@ -208,7 +208,10 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   try {
     await sendResetPasswordEmail(email, resetToken);
-    res.json({ message: "Enlace de restablecimiento de contraseña enviado" });
+    res.json({
+      message: "Enlace de restablecimiento de contraseña enviado",
+      token: resetToken,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error al enviar el correo electrónico" });
   }

@@ -26,13 +26,13 @@ router.post(
   validateForgotPassword,
   handleValidationErrors,
   forgotPassword
-); 
-  router.post(
-    "/resetPassword",
-    validateResetPassword,
-    handleValidationErrors,
-    resetPassword
-  ); 
+);
+router.post(
+  "/resetPassword",
+  validateResetPassword,
+  handleValidationErrors,
+  resetPassword
+);
 
 router
   .route("/")
@@ -50,6 +50,5 @@ router
   .get(protect, admin, getUserById)
   .put(protect, admin, updateUser)
   .put(protect, admin, updateUser);
-
 
 export default router;
